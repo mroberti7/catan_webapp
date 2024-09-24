@@ -1,0 +1,9 @@
+**/dist
+**/coverage
+**/project.json
+.yarn
+.dockerignore
+.next
+tmp
+.vscode
+
