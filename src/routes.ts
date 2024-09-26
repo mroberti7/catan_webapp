@@ -11,6 +11,9 @@ export const ROUTES: Routes = {
   PLAYERS: {
     pathname: '/players',
   },
+  GAMES: {
+    pathname: '/games',
+  },
   STATISTICS: {
     pathname: '/statistics',
   },
