@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   trailingSlash: false,
   reactStrictMode: true,
   images: {
+    loader: 'custom',
+    loaderFile: './src/app/_components/loader/loader.tsx',
     remotePatterns: [
       {
         protocol: 'https',
