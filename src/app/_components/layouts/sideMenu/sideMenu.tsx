@@ -3,6 +3,7 @@ import { ChartBarIcon, WrenchScrewdriverIcon, UsersIcon, XMarkIcon, TrophyIcon }
 import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction } from 'react';
 import Image from 'next/image';
+import Ping from '@/app/_components/ping/ping';
 type SideMenuProps = {
   isOpen: boolean;
   openMenu: Dispatch<SetStateAction<boolean>>;
@@ -57,6 +58,9 @@ const SideMenu = ({ isOpen, openMenu }: SideMenuProps) => {
                 <span className="text-2xl font-medium text-secondary">{entry.label}</span>
               </button>
             ))}
+            <div className="mt-8">
+              <Ping showTriggerButton />
+            </div>
           </div>
         </div>
       )}
