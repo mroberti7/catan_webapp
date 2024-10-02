@@ -1,0 +1,1 @@
+//TODO: move .htaccess to out folder after each build and use this script for yarn build

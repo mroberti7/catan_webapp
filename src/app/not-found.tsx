@@ -7,6 +7,7 @@ import { ROUTES } from '@/routes';
 import { HomeIcon } from '@heroicons/react/24/solid';
 export default function Home() {
   const router = useRouter();
+
   return (
     <>
       <Header />

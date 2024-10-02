@@ -2,6 +2,7 @@
 const nextConfig = {
   output: 'export',
   distDir: 'out',
+  assetPrefix: './', // Use absolute paths
   trailingSlash: false,
   reactStrictMode: true,
   images: {

@@ -3,8 +3,21 @@ import ComposedLayout from '@/app/_components/layouts';
 import Loader from '@/app/_components/loader/loader';
 import { getPlayers } from '@/app/utils/api/api';
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { PlayerDTO } from '@/lib/generated';
+// import { isValidURL } from '@/app/utils/string';
+import { Paper } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+
+const columns: GridColDef[] = [
+  { field: 'id', headerName: 'ID', width: 70 },
+  { field: 'avatarUrl', headerName: 'Avatar', width: 130 },
+  { field: 'username', headerName: 'Username', width: 130 },
+  { field: 'email', headerName: 'email', width: 130 },
+  { field: 'deleted', headerName: 'deleted', width: 130 },
+];
+
+const paginationModel = { page: 0, pageSize: 5 };
 
 const PlayersPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,7 +40,7 @@ const PlayersPage = () => {
 
   return (
     <ComposedLayout>
-      <div className="flex h-full w-full flex-col gap-4">
+      <div className="mt-20 flex h-full w-full flex-col gap-4">
         {isLoading && (
           <div className="flex h-full w-full flex-col items-center justify-center">
             <Loader />
@@ -35,17 +48,19 @@ const PlayersPage = () => {
         )}
 
         {!isLoading && players && (
-          <div className="ml-20 mt-16 grid grid-cols-1 gap-6">
+          <>
             <span className="text-3xl font-bold">Players</span>
-            {players.map(player => (
-              <div key={player.username} className={`flex items-center justify-start gap-4 ${player.deleted ? 'text-red-500' : ''}`}>
-                {player.avatarUrl && (
-                  <Image src={player.avatarUrl} alt={player.username ?? ''} width={50} height={50} className="rounded-full" />
-                )}
-                <h1>{player.username}</h1>
-              </div>
-            ))}
-          </div>
+            <Paper sx={{ height: 400, width: '100%' }}>
+              <DataGrid
+                rows={players}
+                columns={columns}
+                initialState={{ pagination: { paginationModel } }}
+                pageSizeOptions={[5, 10]}
+                // checkboxSelection
+                sx={{ border: 0 }}
+              />
+            </Paper>
+          </>
         )}
 
         {!isLoading && !players && (

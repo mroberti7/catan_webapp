@@ -94,13 +94,13 @@ export interface GameDTO {
    * @type {number}
    * @memberof GameDTO
    */
-  id: number;
+  id?: number;
   /**
    *
    * @type {string}
    * @memberof GameDTO
    */
-  startTimestamp: string;
+  startTimestamp?: string;
   /**
    *
    * @type {string}
@@ -142,6 +142,79 @@ export interface InitTurnDTO {
 /**
  *
  * @export
+ * @interface PageGameDTO
+ */
+export interface PageGameDTO {
+  /**
+   *
+   * @type {number}
+   * @memberof PageGameDTO
+   */
+  totalElements?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PageGameDTO
+   */
+  totalPages?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PageGameDTO
+   */
+  size?: number;
+  /**
+   *
+   * @type {Array<GameDTO>}
+   * @memberof PageGameDTO
+   */
+  content?: Array<GameDTO>;
+  /**
+   *
+   * @type {number}
+   * @memberof PageGameDTO
+   */
+  number?: number;
+  /**
+   *
+   * @type {Array<SortObject>}
+   * @memberof PageGameDTO
+   */
+  sort?: Array<SortObject>;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PageGameDTO
+   */
+  first?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PageGameDTO
+   */
+  last?: boolean;
+  /**
+   *
+   * @type {number}
+   * @memberof PageGameDTO
+   */
+  numberOfElements?: number;
+  /**
+   *
+   * @type {PageableObject}
+   * @memberof PageGameDTO
+   */
+  pageable?: PageableObject;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PageGameDTO
+   */
+  empty?: boolean;
+}
+/**
+ *
+ * @export
  * @interface PagePlayerDTO
  */
 export interface PagePlayerDTO {
@@ -150,13 +223,13 @@ export interface PagePlayerDTO {
    * @type {number}
    * @memberof PagePlayerDTO
    */
-  totalPages?: number;
+  totalElements?: number;
   /**
    *
    * @type {number}
    * @memberof PagePlayerDTO
    */
-  totalElements?: number;
+  totalPages?: number;
   /**
    *
    * @type {number}
@@ -235,13 +308,13 @@ export interface PageableObject {
    * @type {boolean}
    * @memberof PageableObject
    */
-  paged?: boolean;
+  unpaged?: boolean;
   /**
    *
-   * @type {number}
+   * @type {boolean}
    * @memberof PageableObject
    */
-  pageNumber?: number;
+  paged?: boolean;
   /**
    *
    * @type {number}
@@ -250,10 +323,10 @@ export interface PageableObject {
   pageSize?: number;
   /**
    *
-   * @type {boolean}
+   * @type {number}
    * @memberof PageableObject
    */
-  unpaged?: boolean;
+  pageNumber?: number;
 }
 /**
  *
@@ -261,6 +334,12 @@ export interface PageableObject {
  * @interface PlayerDTO
  */
 export interface PlayerDTO {
+  /**
+   *
+   * @type {number}
+   * @memberof PlayerDTO
+   */
+  id?: number;
   /**
    *
    * @type {string}
@@ -511,6 +590,48 @@ export const GameControllerApiAxiosParamCreator = function (configuration?: Conf
     },
     /**
      *
+     * @param {number} [page] Zero-based page index (0..N)
+     * @param {number} [size] The size of the page to be returned
+     * @param {Array<string>} [sort] Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    search1: async (page?: number, size?: number, sort?: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+      const localVarPath = `/game`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      if (page !== undefined) {
+        localVarQueryParameter['page'] = page;
+      }
+
+      if (size !== undefined) {
+        localVarQueryParameter['size'] = size;
+      }
+
+      if (sort) {
+        localVarQueryParameter['sort'] = sort;
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {number} id
      * @param {Array<PlayerScoreDTO>} playerScoreDTO
      * @param {*} [options] Override http request option.
@@ -609,6 +730,26 @@ export const GameControllerApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {number} [page] Zero-based page index (0..N)
+     * @param {number} [size] The size of the page to be returned
+     * @param {Array<string>} [sort] Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async search1(
+      page?: number,
+      size?: number,
+      sort?: Array<string>,
+      options?: RawAxiosRequestConfig,
+    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageGameDTO>> {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.search1(page, size, sort, options);
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath = operationServerMap['GameControllerApi.search1']?.[localVarOperationServerIndex]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
      * @param {number} id
      * @param {Array<PlayerScoreDTO>} playerScoreDTO
      * @param {*} [options] Override http request option.
@@ -662,6 +803,17 @@ export const GameControllerApiFactory = function (configuration?: Configuration,
      */
     getGameRanking(id: number, options?: RawAxiosRequestConfig): AxiosPromise<Array<PlayerScoreDTO>> {
       return localVarFp.getGameRanking(id, options).then(request => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {number} [page] Zero-based page index (0..N)
+     * @param {number} [size] The size of the page to be returned
+     * @param {Array<string>} [sort] Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    search1(page?: number, size?: number, sort?: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<PageGameDTO> {
+      return localVarFp.search1(page, size, sort, options).then(request => request(axios, basePath));
     },
     /**
      *
@@ -719,6 +871,21 @@ export class GameControllerApi extends BaseAPI {
   public getGameRanking(id: number, options?: RawAxiosRequestConfig) {
     return GameControllerApiFp(this.configuration)
       .getGameRanking(id, options)
+      .then(request => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {number} [page] Zero-based page index (0..N)
+   * @param {number} [size] The size of the page to be returned
+   * @param {Array<string>} [sort] Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof GameControllerApi
+   */
+  public search1(page?: number, size?: number, sort?: Array<string>, options?: RawAxiosRequestConfig) {
+    return GameControllerApiFp(this.configuration)
+      .search1(page, size, sort, options)
       .then(request => request(this.axios, this.basePath));
   }
 
@@ -1107,6 +1274,102 @@ export class PlayerControllerApi extends BaseAPI {
   public updatePlayer(id: number, playerDTO: PlayerDTO, options?: RawAxiosRequestConfig) {
     return PlayerControllerApiFp(this.configuration)
       .updatePlayer(id, playerDTO, options)
+      .then(request => request(this.axios, this.basePath));
+  }
+}
+
+/**
+ * ServerStatusApi - axios parameter creator
+ * @export
+ */
+export const ServerStatusApiAxiosParamCreator = function (configuration?: Configuration) {
+  return {
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    status: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+      const localVarPath = `/server-status`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
+
+/**
+ * ServerStatusApi - functional programming interface
+ * @export
+ */
+export const ServerStatusApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator = ServerStatusApiAxiosParamCreator(configuration);
+  return {
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async status(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.status(options);
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath = operationServerMap['ServerStatusApi.status']?.[localVarOperationServerIndex]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+    },
+  };
+};
+
+/**
+ * ServerStatusApi - factory interface
+ * @export
+ */
+export const ServerStatusApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+  const localVarFp = ServerStatusApiFp(configuration);
+  return {
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    status(options?: RawAxiosRequestConfig): AxiosPromise<void> {
+      return localVarFp.status(options).then(request => request(axios, basePath));
+    },
+  };
+};
+
+/**
+ * ServerStatusApi - object-oriented interface
+ * @export
+ * @class ServerStatusApi
+ * @extends {BaseAPI}
+ */
+export class ServerStatusApi extends BaseAPI {
+  /**
+   *
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ServerStatusApi
+   */
+  public status(options?: RawAxiosRequestConfig) {
+    return ServerStatusApiFp(this.configuration)
+      .status(options)
       .then(request => request(this.axios, this.basePath));
   }
 }

@@ -14,14 +14,14 @@ const SideMenu = ({ isOpen, openMenu }: SideMenuProps) => {
 
   const menuEntries: { icon: React.ElementType; label: string; path: string }[] = [
     {
-      icon: UsersIcon,
-      label: 'Players',
-      path: ROUTES.PLAYERS.pathname,
-    },
-    {
       icon: TrophyIcon,
       label: 'Games',
       path: ROUTES.GAMES.pathname,
+    },
+    {
+      icon: UsersIcon,
+      label: 'Players',
+      path: ROUTES.PLAYERS.pathname,
     },
     {
       icon: ChartBarIcon,
@@ -39,7 +39,7 @@ const SideMenu = ({ isOpen, openMenu }: SideMenuProps) => {
   return (
     <>
       {isOpen && (
-        <div className="fixed left-0 -mt-16 h-full w-64 bg-catan-red px-2 py-3 shadow-2xl open:animate-slideRight">
+        <div className="fixed left-0 z-50 -mt-16 h-full w-64 bg-catan-red px-2 py-3 shadow-2xl open:animate-slideRight">
           <div className="ml-3 flex justify-end pt-1">
             <button onClick={() => openMenu(false)}>
               <XMarkIcon className="size-10 text-primary" />
@@ -58,7 +58,7 @@ const SideMenu = ({ isOpen, openMenu }: SideMenuProps) => {
                 <span className="text-2xl font-medium text-secondary">{entry.label}</span>
               </button>
             ))}
-            <div className="mt-8">
+            <div className="mt-16">
               <Ping showTriggerButton />
             </div>
           </div>

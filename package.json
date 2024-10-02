@@ -17,16 +17,23 @@
     "generate-api": "openapi-generator-cli generate -i src/lib/catan-api-docs.json -g typescript-axios -o src/lib/generated"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@heroicons/react": "^2.1.5",
+    "@mui/material": "^6.1.1",
+    "@mui/x-data-grid": "^7.18.0",
     "@next/font": "^14.2.13",
     "@openapitools/openapi-generator-cli": "^2.13.12",
     "axios": "^1.7.7",
     "next": "14.2.13",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "recharts": "^2.12.7"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
+    "@testing-library/user-event": "^14.5.2",
     "@types/jest": "^29.5.13",
     "@types/node": "^22.7.4",
     "@types/react": "^18.3.10",
@@ -34,6 +41,7 @@
     "eslint": "^9.11.1",
     "eslint-config-next": "14.2.13",
     "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",

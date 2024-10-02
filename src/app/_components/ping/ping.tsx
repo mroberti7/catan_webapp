@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 
 type PingProps = {
   showTriggerButton?: boolean;
+  showBackground?: boolean;
 };
 
 const statusMap = {
@@ -10,7 +11,7 @@ const statusMap = {
   checking: 'bg-yellow-600',
   active: 'bg-green-600',
 };
-const Ping = ({ showTriggerButton = false }: PingProps) => {
+const Ping = ({ showTriggerButton = false, showBackground = true }: PingProps) => {
   const [statusBg, setStatusBg] = useState(statusMap.active);
 
   const handlePing = async () => {
@@ -25,8 +26,8 @@ const Ping = ({ showTriggerButton = false }: PingProps) => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center gap-4 rounded-lg bg-primary p-4">
-      <div className={`size-10 rounded-full shadow-xl ${statusBg}`}></div>
+    <div className={`flex flex-col items-center gap-4 rounded-lg bg-opacity-80 ${showBackground ? 'bg-primary p-4' : 'bg-transparent'}`}>
+      <div className={`${showBackground ? 'size-10' : 'size-6'} rounded-full shadow-xl ${statusBg} border-1 border-gray-800`}></div>
       {showTriggerButton && (
         <button onClick={handlePing} className="h-8 w-12 rounded-lg bg-black">
           Ping

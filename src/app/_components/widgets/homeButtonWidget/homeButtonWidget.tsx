@@ -3,7 +3,7 @@ import { ROUTES } from '@/routes';
 import { PlusCircleIcon, ChartBarIcon } from '@heroicons/react/24/outline';
 import {} from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
-import NewGameModal from '@/app/_components/widgets/homeButtonWidget/newGameModal';
+import NewGameModal from '@/app/_components/widgets/newGameWidget/newGameModal';
 import { useState } from 'react';
 
 const HomeButtonWidget = () => {

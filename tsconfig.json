@@ -1,3 +1,4 @@
+// ATTENZIONE CHE SI SPACCA LA BUILD
 {
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
