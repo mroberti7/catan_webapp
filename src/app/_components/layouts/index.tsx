@@ -13,7 +13,7 @@ const ComposedLayout = ({ children }: ComposedLayoutProps) => {
     <div className="mt-16">
       <Header isOpen={isSideMenuOpen} openMenu={setIsSideMenuOpen} />
       <SideMenu isOpen={isSideMenuOpen} openMenu={setIsSideMenuOpen} />
-      <div className="mx-8 h-dvh">{children}</div>
+      <div className="h-dvh">{children}</div>
       <Footer />
     </div>
   );

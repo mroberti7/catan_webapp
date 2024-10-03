@@ -36,7 +36,7 @@ const Game = () => {
 
   return (
     <ComposedLayout>
-      <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+      <div className="bh flex h-full w-full flex-col items-center justify-center gap-4 bg-[url('/assets/wallpapers/wallpaper-seafarers.png')] bg-cover bg-bottom bg-no-repeat">
         {isLoading && <Loader />}
         {!isLoading && (game ? <GameWidget game={game} /> : <div>Game not found</div>)}
       </div>

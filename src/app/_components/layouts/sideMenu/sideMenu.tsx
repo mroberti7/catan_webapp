@@ -54,8 +54,8 @@ const SideMenu = ({ isOpen, openMenu }: SideMenuProps) => {
             </div>
             {menuEntries.map((entry, index) => (
               <button key={index} className="flex items-center justify-center gap-3" onClick={() => router.push(entry.path)}>
-                <entry.icon className="size-9 text-secondary" />
-                <span className="text-2xl font-medium text-secondary">{entry.label}</span>
+                <entry.icon className="size-7 text-secondary md:size-8" />
+                <span className="text-lg font-medium text-secondary md:text-xl">{entry.label}</span>
               </button>
             ))}
             <div className="mt-16">

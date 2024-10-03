@@ -1,4 +1,4 @@
-import { PlayerDTO, PlayerControllerApi, GameControllerApi, ServerStatusApi, PlayerScoreDTO, GameDTO } from '@/lib/generated';
+import { PlayerDTO, PlayerControllerApi, GameControllerApi, PlayerScoreDTO, GameDTO, ServerStatusApi } from '@/lib/generated';
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const playerApi = new PlayerControllerApi(undefined, BASE_URL);
@@ -18,7 +18,6 @@ export const checkServerStatus = async (): Promise<boolean> => {
 export const getPlayers = async (): Promise<PlayerDTO[]> => {
   try {
     const response = await playerApi.search();
-    console.log('Player data:', response);
     return response?.data?.content || [];
   } catch (error) {
     console.error('Error fetching player data:', error);
@@ -47,8 +46,6 @@ export const getGameById = async (id: number): Promise<PlayerScoreDTO[] | null> 
 };
 
 export const createGame = async (gameData: PlayerScoreDTO[]): Promise<number> => {
-  // TODO: mi deve tornare qualche info del gioco creato, almeno l'id in modo da
-  // TODO: fare redirect su games/[id] per poter effettivamente giocare
   try {
     const response = await gameApi.createNewGame(gameData);
     return response?.data;
