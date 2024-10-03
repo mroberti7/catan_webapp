@@ -13,11 +13,13 @@ const GameWidget = ({ game }: GameWidgetProps) => {
   console.log(game);
   const [showPlayers, setShowPlayers] = useState(true);
 
+  const playerSectionHeight = '13rem';
+
   return (
     <div className="h-full w-full bg-slate-500 bg-opacity-10">
       {showPlayers ? (
-        <div id="players" className="mb-2 flex w-full flex-col bg-slate-600 bg-opacity-70 px-8">
-          <div id="game-info" className="flex w-full items-center justify-between">
+        <div id="players" className="fixed mb-2 flex w-full flex-col overflow-hidden bg-slate-600 bg-opacity-70 px-2">
+          <div id="game-info" className="flex w-full items-center justify-between px-3">
             <span> Start: </span>
             <h1>Game title</h1>
             <span> End: SOLO se esistente</span>
@@ -39,7 +41,13 @@ const GameWidget = ({ game }: GameWidgetProps) => {
         </div>
       )}
 
-      <div id="game-actions" className="flex h-full w-full items-center justify-between bg-red-500 bg-opacity-50"></div>
+      <div
+        id="game-actions"
+        className="flex h-full w-full items-start justify-between bg-red-500 bg-opacity-50"
+        style={{ marginTop: showPlayers ? playerSectionHeight : '' }}
+      >
+        HELLO
+      </div>
     </div>
   );
 };
