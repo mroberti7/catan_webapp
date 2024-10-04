@@ -2,32 +2,60 @@ import { PlayerColor } from '@/enum';
 import { PlayerDTO } from '@/lib/generated';
 import { ArrowRightIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 type NewGameSelectPlayerProps = {
   allPlayers: PlayerDTO[];
   selectedPlayers: PlayerDTO[];
   handleAddPlayer: (player: PlayerDTO, add: boolean) => void;
+  playersColors: { playerId: number; color: PlayerColor }[];
+  setPlayersColors: Dispatch<
+    SetStateAction<
+      {
+        playerId: number;
+        color: PlayerColor;
+      }[]
+    >
+  >;
 };
 
-const NewGameSelectPlayer = ({ allPlayers, selectedPlayers, handleAddPlayer }: NewGameSelectPlayerProps) => {
-  const [playerColor, setPlayerColor] = useState<string>(PlayerColor.Petrol); //TODO: TMP
-  const availableColors = Object.keys(PlayerColor) as Array<keyof typeof PlayerColor>;
+const NewGameSelectPlayer = ({
+  allPlayers,
+  selectedPlayers,
+  handleAddPlayer,
+  playersColors,
+  setPlayersColors,
+}: NewGameSelectPlayerProps) => {
+  const [availableColors] = useState(Object.keys(PlayerColor) as Array<keyof typeof PlayerColor>);
 
   function getRandomColor(): PlayerColor {
     const randomIndex = Math.floor(Math.random() * availableColors.length);
-    const selectedColorKey = availableColors[randomIndex];
-    availableColors.splice(randomIndex, 1);
-    return PlayerColor[selectedColorKey] ?? PlayerColor.Petrol;
+    const updatedColors = [...availableColors]; // Copy the array
+    const [selectedColor] = updatedColors.splice(randomIndex, 1); // Remove the selected color
+    return PlayerColor[selectedColor] ?? PlayerColor.Petrol; // Return the selected color
   }
 
   const handleSetPlayerAndColor = (player: PlayerDTO, addToSelectedPlayers: boolean, addColorToPlayer: boolean) => {
-    if (addColorToPlayer && !addToSelectedPlayers) {
-      setPlayerColor(getRandomColor());
+    //TODO: rework
+    if (addColorToPlayer) {
+      setPlayersColors([...playersColors, { playerId: player.id ?? -1, color: getRandomColor() }]);
     } else {
-      return handleAddPlayer(player, addToSelectedPlayers);
+      setPlayersColors([...playersColors.filter(color => color.playerId !== player.id)]);
     }
+    return handleAddPlayer(player, addToSelectedPlayers);
   };
+
+  const changePlayerColor = (player: PlayerDTO) => {
+    setPlayersColors([
+      ...playersColors.filter(color => color.playerId !== player.id),
+      { playerId: player.id ?? -1, color: getRandomColor() },
+    ]);
+  };
+
+  useEffect(() => {
+    console.log('playersColors', playersColors);
+    console.log('availableColors', availableColors);
+  }, [playersColors, availableColors]);
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
@@ -64,9 +92,9 @@ const NewGameSelectPlayer = ({ allPlayers, selectedPlayers, handleAddPlayer }: N
                   </button>{' '}
                   <span className="text-sm">{player.username}</span>
                   <button
-                    onClick={() => handleSetPlayerAndColor(player, false, true)}
+                    onClick={() => changePlayerColor(player)}
                     className="rounded-md hover:bg-opacity-80"
-                    style={{ backgroundColor: playerColor }}
+                    style={{ backgroundColor: playersColors.find(color => color.playerId === player.id)?.color }}
                   >
                     {player.avatarUrl && <Image src={player.avatarUrl} alt={player.username ?? 'userAvatar'} width={40} height={40} />}
                   </button>

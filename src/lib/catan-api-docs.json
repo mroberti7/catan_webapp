@@ -3,15 +3,6 @@
   "info": { "title": "OpenAPI definition", "version": "v0" },
   "servers": [{ "url": "http://localhost:8080", "description": "Generated server url" }],
   "paths": {
-    "/turn/{id}": {
-      "put": {
-        "tags": ["turn-controller"],
-        "operationId": "endTurn",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }],
-        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/EndTurnDTO" } } }, "required": true },
-        "responses": { "200": { "description": "OK" } }
-      }
-    },
     "/player/{id}": {
       "get": {
         "tags": ["player-controller"],
@@ -25,35 +16,6 @@
         "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }],
         "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PlayerDTO" } } }, "required": true },
         "responses": { "200": { "description": "OK" } }
-      }
-    },
-    "/game/{id}": {
-      "put": {
-        "tags": ["game-controller"],
-        "operationId": "updateScoreAndEndGame",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }],
-        "requestBody": {
-          "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/PlayerScoreDTO" } } } },
-          "required": true
-        },
-        "responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/GameDTO" } } } } }
-      },
-      "delete": {
-        "tags": ["game-controller"],
-        "operationId": "deleteGame",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }],
-        "responses": { "204": { "description": "No Content" } }
-      }
-    },
-    "/turn": {
-      "post": {
-        "tags": ["turn-controller"],
-        "operationId": "newTurn",
-        "requestBody": {
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/InitTurnDTO" } } },
-          "required": true
-        },
-        "responses": { "201": { "description": "Created", "content": { "*/*": { "schema": { "type": "integer", "format": "int64" } } } } }
       }
     },
     "/player": {
@@ -99,7 +61,7 @@
     "/game": {
       "get": {
         "tags": ["game-controller"],
-        "operationId": "search_1",
+        "operationId": "searchGames",
         "parameters": [
           {
             "name": "page",
@@ -120,16 +82,16 @@
             "in": "query",
             "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
             "required": false,
-            "schema": { "type": "array", "items": { "type": "string" }, "default": ["startTimestamp,DESC"] }
+            "schema": { "type": "array", "items": { "type": "string" }, "default": ["id,ASC"] }
           }
         ],
         "responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageGameDTO" } } } } }
       },
       "post": {
         "tags": ["game-controller"],
-        "operationId": "createNewGame",
+        "operationId": "createGame",
         "requestBody": {
-          "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/PlayerScoreDTO" } } } },
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GameSetupDTO" } } },
           "required": true
         },
         "responses": { "201": { "description": "Created", "content": { "*/*": { "schema": { "type": "integer", "format": "int64" } } } } }
@@ -155,82 +117,48 @@
         }
       }
     },
-    "/server-status": { "get": { "tags": ["server-status"], "operationId": "status", "responses": { "200": { "description": "OK" } } } },
-    "/game/{id}/score": {
-      "get": {
-        "tags": ["game-controller"],
-        "operationId": "getGameRanking",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": { "*/*": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/PlayerScoreDTO" } } } }
-          }
-        }
-      }
-    }
+    "/server-status": { "get": { "tags": ["server-status"], "operationId": "status", "responses": { "200": { "description": "OK" } } } }
   },
   "components": {
     "schemas": {
-      "EndTurnDTO": {
-        "type": "object",
-        "properties": {
-          "developCardDrawn": { "type": "integer", "format": "int32" },
-          "developCardPlayed": { "type": "boolean" },
-          "roadsBuilt": { "type": "integer", "format": "int32" },
-          "coloniesBuilt": { "type": "integer", "format": "int32" },
-          "citiesBuilt": { "type": "integer", "format": "int32" }
-        }
-      },
       "PlayerDTO": {
         "type": "object",
         "properties": {
-          "id": { "type": "integer", "format": "int64" },
+          "id": { "type": "integer", "format": "int64", "readOnly": true },
           "username": { "type": "string" },
           "email": { "type": "string" },
           "avatarUrl": { "type": "string" },
           "deleted": { "type": "boolean" }
         }
       },
-      "PlayerScoreDTO": {
-        "required": ["playerId", "startOrder"],
+      "GameInfoDTO": {
         "type": "object",
         "properties": {
-          "playerId": { "type": "integer", "format": "int64" },
-          "startOrder": { "minimum": 0, "type": "integer", "format": "int32" },
-          "longestRoad": { "type": "boolean" },
-          "largestArmy": { "type": "boolean" },
-          "score": { "minimum": 0, "type": "integer", "format": "int32" },
-          "victoryPoints": { "minimum": 0, "type": "integer", "format": "int32" }
-        }
+          "gameName": { "type": "string" },
+          "gameType": { "type": "string", "enum": ["STANDARD", "SEAFARERS"] },
+          "numberOfPlayers": { "maximum": 6, "minimum": 2, "type": "integer", "format": "int32" },
+          "requiredVictoryPoints": { "type": "integer", "format": "int32" }
+        },
+        "description": "Basic info about the game"
       },
-      "GameDTO": {
+      "GamePlayerInfoDTO": {
+        "required": ["playerColor"],
         "type": "object",
         "properties": {
-          "id": { "type": "integer", "format": "int64" },
-          "startTimestamp": { "type": "string", "format": "date-time" },
-          "endTimestamp": { "type": "string", "format": "date-time" },
-          "playerScores": { "type": "array", "items": { "$ref": "#/components/schemas/PlayerScore" } }
-        }
-      },
-      "PlayerScore": {
-        "type": "object",
-        "properties": {
+          "gameId": { "type": "integer", "format": "int64", "readOnly": true },
           "playerId": { "type": "integer", "format": "int64" },
-          "startOrder": { "type": "integer", "format": "int32" },
-          "longestRoad": { "type": "boolean" },
-          "largestArmy": { "type": "boolean" },
-          "score": { "type": "integer", "format": "int32" },
-          "victoryPoints": { "type": "integer", "format": "int32" }
-        }
+          "startOrder": { "maximum": 6, "minimum": 0, "type": "integer", "format": "int32" },
+          "playerColor": { "type": "string" }
+        },
+        "description": "Basic info about the players participating to the game"
       },
-      "InitTurnDTO": {
+      "GameSetupDTO": {
         "type": "object",
         "properties": {
-          "gameId": { "type": "integer", "format": "int64" },
-          "playerId": { "type": "integer", "format": "int64" },
-          "outcome": { "type": "integer", "format": "int32" }
-        }
+          "gameInfo": { "$ref": "#/components/schemas/GameInfoDTO" },
+          "playersInfo": { "type": "array", "items": { "$ref": "#/components/schemas/GamePlayerInfoDTO" } }
+        },
+        "description": "Required info to setup a new game"
       },
       "DiceDashboardDTO": {
         "type": "object",
@@ -257,10 +185,10 @@
         "properties": {
           "offset": { "type": "integer", "format": "int64" },
           "sort": { "type": "array", "items": { "$ref": "#/components/schemas/SortObject" } },
-          "unpaged": { "type": "boolean" },
-          "paged": { "type": "boolean" },
+          "pageNumber": { "type": "integer", "format": "int32" },
           "pageSize": { "type": "integer", "format": "int32" },
-          "pageNumber": { "type": "integer", "format": "int32" }
+          "paged": { "type": "boolean" },
+          "unpaged": { "type": "boolean" }
         }
       },
       "SortObject": {
@@ -271,6 +199,31 @@
           "ascending": { "type": "boolean" },
           "property": { "type": "string" },
           "ignoreCase": { "type": "boolean" }
+        }
+      },
+      "GameDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "gameName": { "type": "string" },
+          "gameType": { "type": "string", "enum": ["STANDARD", "SEAFARERS"] },
+          "numberOfPlayers": { "type": "integer", "format": "int32" },
+          "requiredVictoryPoints": { "type": "integer", "format": "int32" },
+          "startTimestamp": { "type": "string", "format": "date-time" },
+          "endTimestamp": { "type": "string", "format": "date-time" },
+          "gamePlayers": { "type": "array", "items": { "$ref": "#/components/schemas/GamePlayer" } }
+        }
+      },
+      "GamePlayer": {
+        "type": "object",
+        "properties": {
+          "gameId": { "type": "integer", "format": "int64" },
+          "playerId": { "type": "integer", "format": "int64" },
+          "startOrder": { "type": "integer", "format": "int32" },
+          "playerColor": { "type": "string" },
+          "plainScore": { "type": "integer", "format": "int32" },
+          "victoryPointsDrawn": { "type": "integer", "format": "int32" },
+          "winner": { "type": "boolean" }
         }
       },
       "PageGameDTO": {

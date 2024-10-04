@@ -1,16 +1,16 @@
 'use client';
 
-import { PlayerScoreDTO } from '@/lib/generated';
+import { GameDTO } from '@/lib/generated';
 import PlayersTurn from '@/app/_components/widgets/gameWidget/playersTurn';
 import { useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 
 type GameWidgetProps = {
-  game: PlayerScoreDTO[]; //TODO: change
+  game: GameDTO;
 };
 
 const GameWidget = ({ game }: GameWidgetProps) => {
-  console.log(game);
+  console.log('game', game);
   const [showPlayers, setShowPlayers] = useState(true);
 
   const playerSectionHeight = '13rem';

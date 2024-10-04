@@ -1,4 +1,4 @@
-import { PlayerDTO, PlayerControllerApi, GameControllerApi, PlayerScoreDTO, GameDTO, ServerStatusApi } from '@/lib/generated';
+import { PlayerDTO, PlayerControllerApi, GameControllerApi, GameDTO, ServerStatusApi, PageGameDTO, GameSetupDTO } from '@/lib/generated';
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const playerApi = new PlayerControllerApi(undefined, BASE_URL);
@@ -27,7 +27,7 @@ export const getPlayers = async (): Promise<PlayerDTO[]> => {
 
 export const getAllGames = async (): Promise<GameDTO[]> => {
   try {
-    const response = await gameApi.search1();
+    const response = await gameApi.searchGames();
     return response?.data?.content || [];
   } catch (error) {
     console.error('Error fetching game data:', error);
@@ -35,19 +35,19 @@ export const getAllGames = async (): Promise<GameDTO[]> => {
   }
 };
 
-export const getGameById = async (id: number): Promise<PlayerScoreDTO[] | null> => {
+export const getGameById = async (id: number): Promise<GameDTO | null> => {
   try {
-    const response = await gameApi.getGameRanking(id);
-    return response?.data;
+    const response = await gameApi.searchGames(id);
+    return response?.data?.content?.[0] || null;
   } catch (error) {
     console.error('Error fetching game data:', error);
     return null;
   }
 };
 
-export const createGame = async (gameData: PlayerScoreDTO[]): Promise<number> => {
+export const createGame = async (gameData: GameSetupDTO): Promise<number> => {
   try {
-    const response = await gameApi.createNewGame(gameData);
+    const response = await gameApi.createGame(gameData);
     return response?.data;
   } catch (error) {
     console.error('Error creating game:', error);

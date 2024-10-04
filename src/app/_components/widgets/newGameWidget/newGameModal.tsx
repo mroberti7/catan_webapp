@@ -1,6 +1,6 @@
 import Modal from '@/app/_components/modal/modal';
 import { createGame, getPlayers } from '@/app/utils/api/api';
-import { PlayerDTO } from '@/lib/generated';
+import { GamePlayerInfoDTO, PlayerDTO } from '@/lib/generated';
 import { useState, useEffect } from 'react';
 import Button from '@/app/_components/button/button';
 import NewGameSelectPlayer from '@/app/_components/widgets/newGameWidget/newGameSelectPlayer';
@@ -8,7 +8,7 @@ import { createGameData, getSingleGameURL } from '@/app/utils/game';
 import { useRouter } from 'next/navigation';
 import { MAX_GAME_PLAYERS, MAX_GAME_VICTORY_POINTS, MIN_GAME_PLAYERS, MIN_GAME_VICTORY_POINTS } from '@/costants';
 import NewGameVictoryPoints from '@/app/_components/widgets/newGameWidget/newGameVictoryPoints';
-import { Scenario } from '@/enum';
+import { PlayerColor, Scenario } from '@/enum';
 import NewGameSelectScenario from '@/app/_components/widgets/newGameWidget/newGameSelectScenario';
 
 type NewGameModalProps = {
@@ -20,6 +20,7 @@ const NewGameModal = ({ isModalOpen, onClose }: NewGameModalProps) => {
   const router = useRouter();
   const [allPlayers, setAllPlayers] = useState<PlayerDTO[]>([]);
   const [selectedPlayers, setSelectedPlayers] = useState<PlayerDTO[]>([]);
+  const [playersColors, setPlayersColors] = useState<{ playerId: number; color: PlayerColor }[]>([]);
   const [victoryPoints, setVictoryPoints] = useState(10);
   const [scenario, setScenario] = useState<Scenario>(Scenario.Standard);
   const [error, setError] = useState<string | null>(null);
@@ -54,7 +55,11 @@ const NewGameModal = ({ isModalOpen, onClose }: NewGameModalProps) => {
 
   const handleCreateGame = async () => {
     if (validateGame()) {
-      const gameData = createGameData({ players: selectedPlayers, victoryPoints });
+      const gameData = createGameData({
+        players: selectedPlayers,
+        victoryPoints,
+        playersColors,
+      });
       const gameId = await createGame(gameData);
       router.push(getSingleGameURL(gameId));
     }
@@ -82,11 +87,19 @@ const NewGameModal = ({ isModalOpen, onClose }: NewGameModalProps) => {
     fetchPlayers();
   }, []);
 
+  useEffect(() => {}, [selectedPlayers]);
+
   return (
     <Modal isModalOpen={isModalOpen} onClose={onClose}>
       <div className="max-w-dvw flex max-h-dvh min-h-[35rem] min-w-[35rem] flex-col items-center justify-start gap-5 rounded-2xl border-4 border-catan-red p-4">
         <h1 className="text-lg font-bold">New Game</h1>
-        <NewGameSelectPlayer allPlayers={allPlayers} selectedPlayers={selectedPlayers} handleAddPlayer={handleAddPlayer} />
+        <NewGameSelectPlayer
+          allPlayers={allPlayers}
+          selectedPlayers={selectedPlayers}
+          handleAddPlayer={handleAddPlayer}
+          playersColors={playersColors}
+          setPlayersColors={setPlayersColors}
+        />
         <div className="my-3 flex w-full flex-col gap-3">
           <NewGameVictoryPoints victoryPoints={victoryPoints} setVictoryPoints={setVictoryPoints} />
           <NewGameSelectScenario scenario={scenario} setScenario={setScenario} />

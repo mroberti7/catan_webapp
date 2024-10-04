@@ -1,4 +1,4 @@
-import { PlayerDTO } from '@/lib/generated';
+import { GamePlayer, PlayerDTO } from '@/lib/generated';
 import { useState } from 'react';
 import Image from 'next/image';
 import {

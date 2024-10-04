@@ -1,4 +1,5 @@
-import { PlayerDTO, PlayerScoreDTO } from '@/lib/generated';
+import { PlayerColor } from '@/enum';
+import { GameSetupDTO, PlayerDTO } from '@/lib/generated';
 import { ROUTES } from '@/routes';
 
 export const getSingleGameURL = (gameId?: number) => {
@@ -6,18 +7,29 @@ export const getSingleGameURL = (gameId?: number) => {
   return `${ROUTES.GAME.pathname}?id=${gameId}`;
 };
 
-export const createGameData = ({ players, victoryPoints }: { players: PlayerDTO[]; victoryPoints: number }): PlayerScoreDTO[] => {
-  const result: PlayerScoreDTO[] = [];
-
-  players.map((player, index) => {
-    result.push({
-      playerId: player.id ?? 0,
-      startOrder: index,
-      longestRoad: false,
-      largestArmy: false,
-      score: 0,
-      victoryPoints: victoryPoints,
-    });
-  });
-  return result;
+export const createGameData = ({
+  players,
+  victoryPoints,
+  playersColors,
+}: {
+  players: PlayerDTO[];
+  victoryPoints: number;
+  playersColors: { playerId: number; color: PlayerColor }[];
+}): GameSetupDTO => {
+  return {
+    gameInfo: {
+      gameName: 'My test Game',
+      gameType: 'SEAFARERS',
+      numberOfPlayers: players.length,
+      requiredVictoryPoints: victoryPoints,
+    },
+    playersInfo: players.map((player, index) => {
+      return {
+        gameId: -1,
+        playerId: player.id,
+        startOrder: index,
+        playerColor: playersColors.find(color => color.playerId === player.id)?.color ?? PlayerColor.Petrol,
+      };
+    }),
+  };
 };

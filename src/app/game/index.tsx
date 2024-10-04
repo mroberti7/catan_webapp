@@ -7,14 +7,14 @@ import { getGameById } from '@/app/utils/api/api';
 import GameWidget from '@/app/_components/widgets/gameWidget';
 import ComposedLayout from '@/app/_components/layouts';
 import { useEffect, useState } from 'react';
-import { PlayerScoreDTO } from '@/lib/generated';
+import { GameDTO, PageGameDTO } from '@/lib/generated';
 import Loader from '@/app/_components/loader/loader';
 
 const Game = () => {
   //TODO: fetch also GamePlayers and all other game info until it's everything under a single endpoint?
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [game, setGame] = useState<PlayerScoreDTO[] | null>(null); //TODO: CHANGE type
+  const [game, setGame] = useState<GameDTO | null>(null); //TODO: CHANGE type
   const [isLoading, setLoading] = useState(true);
   const gameId = parseInt(searchParams.get('id') ?? '', 10);
   if (isNaN(gameId)) {
@@ -25,6 +25,7 @@ const Game = () => {
     const fetchGame = async () => {
       setLoading(true);
       const gameData = await getGameById(gameId);
+      console.log('gameData', gameData);
       if (!gameData) {
         notFound();
       }
