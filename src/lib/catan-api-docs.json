@@ -1,0 +1,247 @@
+{
+  "openapi": "3.0.1",
+  "info": { "title": "OpenAPI definition", "version": "v0" },
+  "servers": [{ "url": "http://localhost:8080", "description": "Generated server url" }],
+  "paths": {
+    "/player/{id}": {
+      "get": {
+        "tags": ["player-controller"],
+        "operationId": "getPlayer",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }],
+        "responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/PlayerDTO" } } } } }
+      },
+      "put": {
+        "tags": ["player-controller"],
+        "operationId": "updatePlayer",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }],
+        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PlayerDTO" } } }, "required": true },
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/player": {
+      "get": {
+        "tags": ["player-controller"],
+        "operationId": "search",
+        "parameters": [
+          { "name": "username", "in": "query", "required": false, "schema": { "type": "string" } },
+          { "name": "email", "in": "query", "required": false, "schema": { "type": "string" } },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "required": false,
+            "schema": { "minimum": 0, "type": "integer", "default": 0 }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "required": false,
+            "schema": { "minimum": 1, "type": "integer", "default": 5 }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+            "required": false,
+            "schema": { "type": "array", "items": { "type": "string" }, "default": ["id,ASC"] }
+          }
+        ],
+        "responses": {
+          "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/PagePlayerDTO" } } } }
+        }
+      },
+      "post": {
+        "tags": ["player-controller"],
+        "operationId": "newPlayer",
+        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PlayerDTO" } } }, "required": true },
+        "responses": { "201": { "description": "Created", "content": { "*/*": { "schema": { "type": "integer", "format": "int64" } } } } }
+      }
+    },
+    "/game": {
+      "get": {
+        "tags": ["game-controller"],
+        "operationId": "searchGames",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "required": false,
+            "schema": { "minimum": 0, "type": "integer", "default": 0 }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "required": false,
+            "schema": { "minimum": 1, "type": "integer", "default": 5 }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+            "required": false,
+            "schema": { "type": "array", "items": { "type": "string" }, "default": ["id,ASC"] }
+          }
+        ],
+        "responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageGameDTO" } } } } }
+      },
+      "post": {
+        "tags": ["game-controller"],
+        "operationId": "createGame",
+        "requestBody": {
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GameSetupDTO" } } },
+          "required": true
+        },
+        "responses": { "201": { "description": "Created", "content": { "*/*": { "schema": { "type": "integer", "format": "int64" } } } } }
+      }
+    },
+    "/statistics/player-dice-dashboard": {
+      "get": {
+        "tags": ["statistics-controller"],
+        "operationId": "getPlayerOverallDiceDashboard",
+        "parameters": [{ "name": "playerId", "in": "query", "required": true, "schema": { "type": "integer", "format": "int64" } }],
+        "responses": {
+          "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/DiceDashboardDTO" } } } }
+        }
+      }
+    },
+    "/statistics/game-dice-dashboard": {
+      "get": {
+        "tags": ["statistics-controller"],
+        "operationId": "getGameDiceDashboard",
+        "parameters": [{ "name": "gameId", "in": "query", "required": true, "schema": { "type": "integer", "format": "int64" } }],
+        "responses": {
+          "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/DiceDashboardDTO" } } } }
+        }
+      }
+    },
+    "/server-status": { "get": { "tags": ["server-status"], "operationId": "status", "responses": { "200": { "description": "OK" } } } }
+  },
+  "components": {
+    "schemas": {
+      "PlayerDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64", "readOnly": true },
+          "username": { "type": "string" },
+          "email": { "type": "string" },
+          "avatarUrl": { "type": "string" },
+          "deleted": { "type": "boolean" }
+        }
+      },
+      "GameInfoDTO": {
+        "type": "object",
+        "properties": {
+          "gameName": { "type": "string" },
+          "gameType": { "type": "string", "enum": ["STANDARD", "SEAFARERS"] },
+          "numberOfPlayers": { "maximum": 6, "minimum": 2, "type": "integer", "format": "int32" },
+          "requiredVictoryPoints": { "type": "integer", "format": "int32" }
+        },
+        "description": "Basic info about the game"
+      },
+      "GamePlayerInfoDTO": {
+        "required": ["playerColor"],
+        "type": "object",
+        "properties": {
+          "gameId": { "type": "integer", "format": "int64", "readOnly": true },
+          "playerId": { "type": "integer", "format": "int64" },
+          "startOrder": { "maximum": 6, "minimum": 0, "type": "integer", "format": "int32" },
+          "playerColor": { "type": "string" }
+        },
+        "description": "Basic info about the players participating to the game"
+      },
+      "GameSetupDTO": {
+        "type": "object",
+        "properties": {
+          "gameInfo": { "$ref": "#/components/schemas/GameInfoDTO" },
+          "playersInfo": { "type": "array", "items": { "$ref": "#/components/schemas/GamePlayerInfoDTO" } }
+        },
+        "description": "Required info to setup a new game"
+      },
+      "DiceDashboardDTO": {
+        "type": "object",
+        "properties": { "diceCountMap": { "type": "object", "additionalProperties": { "type": "integer", "format": "int64" } } }
+      },
+      "PagePlayerDTO": {
+        "type": "object",
+        "properties": {
+          "totalElements": { "type": "integer", "format": "int64" },
+          "totalPages": { "type": "integer", "format": "int32" },
+          "size": { "type": "integer", "format": "int32" },
+          "content": { "type": "array", "items": { "$ref": "#/components/schemas/PlayerDTO" } },
+          "number": { "type": "integer", "format": "int32" },
+          "sort": { "type": "array", "items": { "$ref": "#/components/schemas/SortObject" } },
+          "first": { "type": "boolean" },
+          "last": { "type": "boolean" },
+          "numberOfElements": { "type": "integer", "format": "int32" },
+          "pageable": { "$ref": "#/components/schemas/PageableObject" },
+          "empty": { "type": "boolean" }
+        }
+      },
+      "PageableObject": {
+        "type": "object",
+        "properties": {
+          "offset": { "type": "integer", "format": "int64" },
+          "sort": { "type": "array", "items": { "$ref": "#/components/schemas/SortObject" } },
+          "pageNumber": { "type": "integer", "format": "int32" },
+          "pageSize": { "type": "integer", "format": "int32" },
+          "paged": { "type": "boolean" },
+          "unpaged": { "type": "boolean" }
+        }
+      },
+      "SortObject": {
+        "type": "object",
+        "properties": {
+          "direction": { "type": "string" },
+          "nullHandling": { "type": "string" },
+          "ascending": { "type": "boolean" },
+          "property": { "type": "string" },
+          "ignoreCase": { "type": "boolean" }
+        }
+      },
+      "GameDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "gameName": { "type": "string" },
+          "gameType": { "type": "string", "enum": ["STANDARD", "SEAFARERS"] },
+          "numberOfPlayers": { "type": "integer", "format": "int32" },
+          "requiredVictoryPoints": { "type": "integer", "format": "int32" },
+          "startTimestamp": { "type": "string", "format": "date-time" },
+          "endTimestamp": { "type": "string", "format": "date-time" },
+          "gamePlayers": { "type": "array", "items": { "$ref": "#/components/schemas/GamePlayer" } }
+        }
+      },
+      "GamePlayer": {
+        "type": "object",
+        "properties": {
+          "gameId": { "type": "integer", "format": "int64" },
+          "playerId": { "type": "integer", "format": "int64" },
+          "startOrder": { "type": "integer", "format": "int32" },
+          "playerColor": { "type": "string" },
+          "plainScore": { "type": "integer", "format": "int32" },
+          "victoryPointsDrawn": { "type": "integer", "format": "int32" },
+          "winner": { "type": "boolean" }
+        }
+      },
+      "PageGameDTO": {
+        "type": "object",
+        "properties": {
+          "totalElements": { "type": "integer", "format": "int64" },
+          "totalPages": { "type": "integer", "format": "int32" },
+          "size": { "type": "integer", "format": "int32" },
+          "content": { "type": "array", "items": { "$ref": "#/components/schemas/GameDTO" } },
+          "number": { "type": "integer", "format": "int32" },
+          "sort": { "type": "array", "items": { "$ref": "#/components/schemas/SortObject" } },
+          "first": { "type": "boolean" },
+          "last": { "type": "boolean" },
+          "numberOfElements": { "type": "integer", "format": "int32" },
+          "pageable": { "$ref": "#/components/schemas/PageableObject" },
+          "empty": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

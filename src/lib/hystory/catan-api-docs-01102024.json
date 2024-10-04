@@ -1,0 +1,249 @@
+{
+  "openapi": "3.0.1",
+  "info": { "title": "OpenAPI definition", "version": "v0" },
+  "servers": [{ "url": "http://localhost:8080", "description": "Generated server url" }],
+  "paths": {
+    "/turn/{id}": {
+      "put": {
+        "tags": ["turn-controller"],
+        "operationId": "endTurn",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }],
+        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/EndTurnDTO" } } }, "required": true },
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/player/{id}": {
+      "get": {
+        "tags": ["player-controller"],
+        "operationId": "getPlayer",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }],
+        "responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/PlayerDTO" } } } } }
+      },
+      "put": {
+        "tags": ["player-controller"],
+        "operationId": "updatePlayer",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }],
+        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PlayerDTO" } } }, "required": true },
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/game/{id}": {
+      "put": {
+        "tags": ["game-controller"],
+        "operationId": "updateScoreAndEndGame",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }],
+        "requestBody": {
+          "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/PlayerScoreDTO" } } } },
+          "required": true
+        },
+        "responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/GameDTO" } } } } }
+      },
+      "delete": {
+        "tags": ["game-controller"],
+        "operationId": "deleteGame",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }],
+        "responses": { "204": { "description": "No Content" } }
+      }
+    },
+    "/turn": {
+      "post": {
+        "tags": ["turn-controller"],
+        "operationId": "newTurn",
+        "requestBody": {
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/InitTurnDTO" } } },
+          "required": true
+        },
+        "responses": { "201": { "description": "Created", "content": { "*/*": { "schema": { "type": "integer", "format": "int64" } } } } }
+      }
+    },
+    "/player": {
+      "get": {
+        "tags": ["player-controller"],
+        "operationId": "search",
+        "parameters": [
+          { "name": "username", "in": "query", "required": false, "schema": { "type": "string" } },
+          { "name": "email", "in": "query", "required": false, "schema": { "type": "string" } },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "required": false,
+            "schema": { "minimum": 0, "type": "integer", "default": 0 }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "required": false,
+            "schema": { "minimum": 1, "type": "integer", "default": 5 }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+            "required": false,
+            "schema": { "type": "array", "items": { "type": "string" }, "default": ["id,ASC"] }
+          }
+        ],
+        "responses": {
+          "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/PagePlayerDTO" } } } }
+        }
+      },
+      "post": {
+        "tags": ["player-controller"],
+        "operationId": "newPlayer",
+        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PlayerDTO" } } }, "required": true },
+        "responses": { "201": { "description": "Created", "content": { "*/*": { "schema": { "type": "integer", "format": "int64" } } } } }
+      }
+    },
+    "/game": {
+      "post": {
+        "tags": ["game-controller"],
+        "operationId": "createNewGame",
+        "requestBody": {
+          "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/PlayerScoreDTO" } } } },
+          "required": true
+        },
+        "responses": { "201": { "description": "Created", "content": { "*/*": { "schema": { "type": "integer", "format": "int64" } } } } }
+      }
+    },
+    "/statistics/player-dice-dashboard": {
+      "get": {
+        "tags": ["statistics-controller"],
+        "operationId": "getPlayerOverallDiceDashboard",
+        "parameters": [{ "name": "playerId", "in": "query", "required": true, "schema": { "type": "integer", "format": "int64" } }],
+        "responses": {
+          "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/DiceDashboardDTO" } } } }
+        }
+      }
+    },
+    "/statistics/game-dice-dashboard": {
+      "get": {
+        "tags": ["statistics-controller"],
+        "operationId": "getGameDiceDashboard",
+        "parameters": [{ "name": "gameId", "in": "query", "required": true, "schema": { "type": "integer", "format": "int64" } }],
+        "responses": {
+          "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/DiceDashboardDTO" } } } }
+        }
+      }
+    },
+    "/game/{id}/score": {
+      "get": {
+        "tags": ["game-controller"],
+        "operationId": "getGameRanking",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/PlayerScoreDTO" } } } }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EndTurnDTO": {
+        "type": "object",
+        "properties": {
+          "developCardDrawn": { "type": "integer", "format": "int32" },
+          "developCardPlayed": { "type": "boolean" },
+          "roadsBuilt": { "type": "integer", "format": "int32" },
+          "coloniesBuilt": { "type": "integer", "format": "int32" },
+          "citiesBuilt": { "type": "integer", "format": "int32" }
+        }
+      },
+      "PlayerDTO": {
+        "type": "object",
+        "properties": {
+          "username": { "type": "string" },
+          "email": { "type": "string" },
+          "avatarUrl": { "type": "string" },
+          "deleted": { "type": "boolean" }
+        }
+      },
+      "PlayerScoreDTO": {
+        "required": ["playerId", "startOrder"],
+        "type": "object",
+        "properties": {
+          "playerId": { "type": "integer", "format": "int64" },
+          "startOrder": { "minimum": 0, "type": "integer", "format": "int32" },
+          "longestRoad": { "type": "boolean" },
+          "largestArmy": { "type": "boolean" },
+          "score": { "minimum": 0, "type": "integer", "format": "int32" },
+          "victoryPoints": { "minimum": 0, "type": "integer", "format": "int32" }
+        }
+      },
+      "GameDTO": {
+        "required": ["id", "startTimestamp"],
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int32" },
+          "startTimestamp": { "type": "string", "format": "date-time" },
+          "endTimestamp": { "type": "string", "format": "date-time" },
+          "playerScores": { "type": "array", "items": { "$ref": "#/components/schemas/PlayerScore" } }
+        }
+      },
+      "PlayerScore": {
+        "type": "object",
+        "properties": {
+          "playerId": { "type": "integer", "format": "int64" },
+          "startOrder": { "type": "integer", "format": "int32" },
+          "longestRoad": { "type": "boolean" },
+          "largestArmy": { "type": "boolean" },
+          "score": { "type": "integer", "format": "int32" },
+          "victoryPoints": { "type": "integer", "format": "int32" }
+        }
+      },
+      "InitTurnDTO": {
+        "type": "object",
+        "properties": {
+          "gameId": { "type": "integer", "format": "int64" },
+          "playerId": { "type": "integer", "format": "int64" },
+          "outcome": { "type": "integer", "format": "int32" }
+        }
+      },
+      "DiceDashboardDTO": {
+        "type": "object",
+        "properties": { "diceCountMap": { "type": "object", "additionalProperties": { "type": "integer", "format": "int64" } } }
+      },
+      "PagePlayerDTO": {
+        "type": "object",
+        "properties": {
+          "totalPages": { "type": "integer", "format": "int32" },
+          "totalElements": { "type": "integer", "format": "int64" },
+          "size": { "type": "integer", "format": "int32" },
+          "content": { "type": "array", "items": { "$ref": "#/components/schemas/PlayerDTO" } },
+          "number": { "type": "integer", "format": "int32" },
+          "sort": { "type": "array", "items": { "$ref": "#/components/schemas/SortObject" } },
+          "first": { "type": "boolean" },
+          "last": { "type": "boolean" },
+          "numberOfElements": { "type": "integer", "format": "int32" },
+          "pageable": { "$ref": "#/components/schemas/PageableObject" },
+          "empty": { "type": "boolean" }
+        }
+      },
+      "PageableObject": {
+        "type": "object",
+        "properties": {
+          "offset": { "type": "integer", "format": "int64" },
+          "sort": { "type": "array", "items": { "$ref": "#/components/schemas/SortObject" } },
+          "paged": { "type": "boolean" },
+          "pageNumber": { "type": "integer", "format": "int32" },
+          "pageSize": { "type": "integer", "format": "int32" },
+          "unpaged": { "type": "boolean" }
+        }
+      },
+      "SortObject": {
+        "type": "object",
+        "properties": {
+          "direction": { "type": "string" },
+          "nullHandling": { "type": "string" },
+          "ascending": { "type": "boolean" },
+          "property": { "type": "string" },
+          "ignoreCase": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}
