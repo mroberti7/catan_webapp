@@ -17,6 +17,7 @@ export const checkServerStatus = async (): Promise<boolean> => {
 
 export const getPlayers = async (): Promise<PlayerDTO[]> => {
   try {
+    //TODO: settare filtro per deleted = false
     const response = await playerApi.search();
     return response?.data?.content || [];
   } catch (error) {
@@ -37,7 +38,12 @@ export const getAllGames = async (): Promise<GameDTO[]> => {
 
 export const getGameById = async (id: number): Promise<GameDTO | null> => {
   try {
-    const response = await gameApi.searchGames(id);
+    // TODO: get sul gioco
+    // TODO: get sui giocatori di tipo GamePlayerDTO
+
+    const response = await gameApi.searchGames();
+    console.log('response', response);
+    const game = response?.data?.content;
     return response?.data?.content?.[0] || null;
   } catch (error) {
     console.error('Error fetching game data:', error);

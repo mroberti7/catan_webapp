@@ -10,6 +10,7 @@ import { MAX_GAME_PLAYERS, MAX_GAME_VICTORY_POINTS, MIN_GAME_PLAYERS, MIN_GAME_V
 import NewGameVictoryPoints from '@/app/_components/widgets/newGameWidget/newGameVictoryPoints';
 import { PlayerColor, Scenario } from '@/enum';
 import NewGameSelectScenario from '@/app/_components/widgets/newGameWidget/newGameSelectScenario';
+import NewGameSelectName from '@/app/_components/widgets/newGameWidget/newGameSelectName';
 
 type NewGameModalProps = {
   isModalOpen: boolean;
@@ -18,6 +19,7 @@ type NewGameModalProps = {
 
 const NewGameModal = ({ isModalOpen, onClose }: NewGameModalProps) => {
   const router = useRouter();
+  const [gameName, setGameName] = useState<string>('');
   const [allPlayers, setAllPlayers] = useState<PlayerDTO[]>([]);
   const [selectedPlayers, setSelectedPlayers] = useState<PlayerDTO[]>([]);
   const [playersColors, setPlayersColors] = useState<{ playerId: number; color: PlayerColor }[]>([]);
@@ -27,20 +29,24 @@ const NewGameModal = ({ isModalOpen, onClose }: NewGameModalProps) => {
 
   const validateGame = () => {
     setError('');
+    if (!gameName) {
+      setError('Dai inventati un bel nome per la partita! 🫶🏾');
+      return false;
+    }
     if (selectedPlayers.length < MIN_GAME_PLAYERS) {
-      setError('I giocatori devono essere almeno 2');
+      setError('I giocatori devono essere almeno 2 🤌🏽');
       return false;
     }
     if (selectedPlayers.length > MAX_GAME_PLAYERS) {
-      setError('I giocatori devono essere al massimo 6');
+      setError('I giocatori devono essere al massimo 6 😫');
       return false;
     }
     if (victoryPoints < MIN_GAME_VICTORY_POINTS) {
-      setError('Non fare lo scarso, almeno 8!');
+      setError('Non fare lo scarso, almeno 8! 👎🏾');
       return false;
     }
     if (victoryPoints > MAX_GAME_VICTORY_POINTS) {
-      setError('Non esagerare, massimo 16!');
+      setError('Non esagerare, massimo 16! 😏');
       return false;
     }
     return true;
@@ -56,9 +62,11 @@ const NewGameModal = ({ isModalOpen, onClose }: NewGameModalProps) => {
   const handleCreateGame = async () => {
     if (validateGame()) {
       const gameData = createGameData({
-        players: selectedPlayers,
-        victoryPoints,
+        gameName,
+        playersIds: selectedPlayers?.map(player => player?.id ?? -1),
         playersColors,
+        victoryPoints,
+        scenario,
       });
       const gameId = await createGame(gameData);
       router.push(getSingleGameURL(gameId));
@@ -93,6 +101,7 @@ const NewGameModal = ({ isModalOpen, onClose }: NewGameModalProps) => {
     <Modal isModalOpen={isModalOpen} onClose={onClose}>
       <div className="max-w-dvw flex max-h-dvh min-h-[35rem] min-w-[35rem] flex-col items-center justify-start gap-5 rounded-2xl border-4 border-catan-red p-4">
         <h1 className="text-lg font-bold">New Game</h1>
+        <NewGameSelectName gameName={gameName} setGameName={setGameName} />
         <NewGameSelectPlayer
           allPlayers={allPlayers}
           selectedPlayers={selectedPlayers}
@@ -100,7 +109,7 @@ const NewGameModal = ({ isModalOpen, onClose }: NewGameModalProps) => {
           playersColors={playersColors}
           setPlayersColors={setPlayersColors}
         />
-        <div className="my-3 flex w-full flex-col gap-3">
+        <div className="flex w-full flex-col gap-3">
           <NewGameVictoryPoints victoryPoints={victoryPoints} setVictoryPoints={setVictoryPoints} />
           <NewGameSelectScenario scenario={scenario} setScenario={setScenario} />
         </div>
@@ -109,7 +118,7 @@ const NewGameModal = ({ isModalOpen, onClose }: NewGameModalProps) => {
             <span className="text-lg font-bold">Create Game</span>
           </Button>
         </div>
-        <div className="mb-2 h-3">{error && <p className="font-semibold text-red-700">{error}</p>}</div>
+        <div className="h-3">{error && <p className="font-semibold text-red-700">{error}</p>}</div>
       </div>
     </Modal>
   );

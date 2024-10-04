@@ -1,4 +1,4 @@
-import { PlayerColor } from '@/enum';
+import { PlayerColor, Scenario } from '@/enum';
 import { GameSetupDTO, PlayerDTO } from '@/lib/generated';
 import { ROUTES } from '@/routes';
 
@@ -8,27 +8,30 @@ export const getSingleGameURL = (gameId?: number) => {
 };
 
 export const createGameData = ({
-  players,
-  victoryPoints,
+  gameName,
+  playersIds,
   playersColors,
+  victoryPoints,
+  scenario,
 }: {
-  players: PlayerDTO[];
-  victoryPoints: number;
+  gameName: string;
+  playersIds: number[];
   playersColors: { playerId: number; color: PlayerColor }[];
+  victoryPoints: number;
+  scenario: Scenario;
 }): GameSetupDTO => {
   return {
     gameInfo: {
-      gameName: 'My test Game',
-      gameType: 'SEAFARERS',
-      numberOfPlayers: players.length,
+      gameName: gameName,
+      gameType: scenario,
+      numberOfPlayers: playersIds.length,
       requiredVictoryPoints: victoryPoints,
     },
-    playersInfo: players.map((player, index) => {
+    playersInfo: playersIds.map((playerId, index) => {
       return {
-        gameId: -1,
-        playerId: player.id,
-        startOrder: index,
-        playerColor: playersColors.find(color => color.playerId === player.id)?.color ?? PlayerColor.Petrol,
+        playerId: playerId,
+        startOrder: index + 1,
+        playerColor: playersColors.find(color => color.playerId === playerId)?.color ?? PlayerColor.Petrol,
       };
     }),
   };

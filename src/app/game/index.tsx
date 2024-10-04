@@ -25,7 +25,6 @@ const Game = () => {
     const fetchGame = async () => {
       setLoading(true);
       const gameData = await getGameById(gameId);
-      console.log('gameData', gameData);
       if (!gameData) {
         notFound();
       }
