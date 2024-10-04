@@ -69,6 +69,10 @@ const NewGameModal = ({ isModalOpen, onClose }: NewGameModalProps) => {
         scenario,
       });
       const gameId = await createGame(gameData);
+      if (!gameId) {
+        setError('Errore nella creazione della partita, colpa di Giovanni');
+        return;
+      }
       router.push(getSingleGameURL(gameId));
     }
   };

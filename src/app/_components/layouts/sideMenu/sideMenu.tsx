@@ -39,7 +39,7 @@ const SideMenu = ({ isOpen, openMenu }: SideMenuProps) => {
   return (
     <>
       {isOpen && (
-        <div className="fixed left-0 z-50 -mt-16 h-full w-64 bg-catan-red px-2 py-3 shadow-2xl open:animate-slideRight">
+        <div className="fixed left-0 z-50 h-full w-64 bg-catan-red px-2 py-3 shadow-2xl open:animate-slideRight">
           <div className="ml-3 flex justify-end pt-1">
             <button onClick={() => openMenu(false)}>
               <XMarkIcon className="size-10 text-primary" />

@@ -7,6 +7,6 @@ export const DEFAULT_LOCALE_OPTIONS: Intl.DateTimeFormatOptions = {
   minute: '2-digit',
 };
 
-export const formatDate = (timestamp: number, locale = DEFAULT_LOCALE, localeOptions = DEFAULT_LOCALE_OPTIONS) => {
-  return new Date(timestamp * 1000).toLocaleString(locale, localeOptions);
+export const formatDate = (timestamp: string, locale = DEFAULT_LOCALE, localeOptions = DEFAULT_LOCALE_OPTIONS) => {
+  return new Date(parseInt(timestamp) * 1000).toLocaleString(locale, localeOptions);
 };

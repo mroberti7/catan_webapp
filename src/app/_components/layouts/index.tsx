@@ -10,11 +10,13 @@ type ComposedLayoutProps = {
 const ComposedLayout = ({ children }: ComposedLayoutProps) => {
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
   return (
-    <div className="mt-16">
-      <Header isOpen={isSideMenuOpen} openMenu={setIsSideMenuOpen} />
+    <div className="flex h-screen">
       <SideMenu isOpen={isSideMenuOpen} openMenu={setIsSideMenuOpen} />
-      <div className="h-dvh">{children}</div>
-      <Footer />
+      <div className="flex min-h-screen flex-1 flex-col">
+        <Header isOpen={isSideMenuOpen} openMenu={setIsSideMenuOpen} />
+        <div className="h-auto flex-1">{children}</div>
+        <Footer />
+      </div>
     </div>
   );
 };

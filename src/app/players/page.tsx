@@ -40,7 +40,7 @@ const PlayersPage = () => {
 
   return (
     <ComposedLayout>
-      <div className="mt-20 flex h-full w-full flex-col gap-4">
+      <div className="flex h-full w-full flex-col gap-4 px-6 pt-20">
         {isLoading && (
           <div className="flex h-full w-full flex-col items-center justify-center">
             <Loader />
@@ -50,7 +50,7 @@ const PlayersPage = () => {
         {!isLoading && players && (
           <>
             <span className="text-3xl font-bold">Players</span>
-            <Paper sx={{ height: 400, width: '100%' }}>
+            <Paper sx={{ height: 400, width: '90%' }}>
               <DataGrid
                 rows={players}
                 columns={columns}

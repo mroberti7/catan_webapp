@@ -9,6 +9,7 @@ import ComposedLayout from '@/app/_components/layouts';
 import { useEffect, useState } from 'react';
 import { GameDTO, PageGameDTO } from '@/lib/generated';
 import Loader from '@/app/_components/loader/loader';
+import { Scenario } from '@/enum';
 
 const Game = () => {
   //TODO: fetch also GamePlayers and all other game info until it's everything under a single endpoint?
@@ -36,7 +37,14 @@ const Game = () => {
 
   return (
     <ComposedLayout>
-      <div className="bh flex h-full w-full flex-col items-center justify-center gap-4 bg-[url('/assets/wallpapers/wallpaper-seafarers.png')] bg-cover bg-bottom bg-no-repeat">
+      <div
+        className="flex h-full w-full flex-col items-center justify-center gap-4 bg-cover bg-bottom bg-no-repeat"
+        style={{
+          backgroundImage: `url('/assets/wallpapers/wallpaper-${
+            (game as any)?.scenario === Scenario.Seafarers ? 'seafarers' : 'settlers'
+          }.png')`,
+        }}
+      >
         {isLoading && <Loader />}
         {!isLoading && (game ? <GameWidget game={game} /> : <div>Game not found</div>)}
       </div>

@@ -32,7 +32,7 @@ const GamesPage = () => {
           games.map(game => (
             <div key={game.id} className="flex items-center justify-center gap-6 rounded-md border-2 border-secondary p-3">
               <h1>ID: {game.id}</h1>
-              <h1>Start: {formatDate(parseInt(game.startTimestamp ?? ''))}</h1>
+              <h1>Start: {formatDate(game.startTimestamp ?? '')}</h1>
               <Button onClick={() => router.push(getSingleGameURL(game.id))}>View Game</Button>
             </div>
           ))}

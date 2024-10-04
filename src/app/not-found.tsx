@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <div className="flex h-full min-h-screen w-full flex-col items-center justify-start gap-6 bg-[url('/assets/wallpapers/wallpaper-seefahrer.png')] bg-cover bg-bottom pt-32">
+      <div className="flex h-full min-h-screen w-full flex-col items-center justify-start gap-6 bg-[url('/assets/wallpapers/wallpaper-seafarers.png')] bg-cover bg-bottom pt-32">
         <div className="flex flex-col items-center justify-center gap-4">
           <h1 className="text-4xl font-bold text-catan-red">404</h1>
           <h1 className="text-3xl font-bold text-catan-red">Page not found</h1>
