@@ -1,4 +1,4 @@
-import { PlayerDTO, PlayerControllerApi, GameControllerApi, GameDTO, ServerStatusApi, PageGameDTO, GameSetupDTO } from '@/lib/generated';
+import { PlayerDTO, PlayerControllerApi, GameControllerApi, GameDTO, ServerStatusApi, GameSetupDTO, GameInfoDTO } from '@/lib/generated';
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const playerApi = new PlayerControllerApi(undefined, BASE_URL);
@@ -18,7 +18,7 @@ export const checkServerStatus = async (): Promise<boolean> => {
 export const getPlayers = async (): Promise<PlayerDTO[]> => {
   try {
     //TODO: settare filtro per deleted = false
-    const response = await playerApi.search();
+    const response = await playerApi.search(undefined, undefined, false);
     return response?.data?.content || [];
   } catch (error) {
     console.error('Error fetching player data:', error);
@@ -26,7 +26,7 @@ export const getPlayers = async (): Promise<PlayerDTO[]> => {
   }
 };
 
-export const getAllGames = async (): Promise<GameDTO[]> => {
+export const getAllGames = async (): Promise<GameInfoDTO[]> => {
   try {
     const response = await gameApi.searchGames();
     return response?.data?.content || [];
@@ -38,13 +38,8 @@ export const getAllGames = async (): Promise<GameDTO[]> => {
 
 export const getGameById = async (id: number): Promise<GameDTO | null> => {
   try {
-    // TODO: get sul gioco
-    // TODO: get sui giocatori di tipo GamePlayerDTO
-
-    const response = await gameApi.searchGames();
-    console.log('response', response);
-    const game = response?.data?.content;
-    return response?.data?.content?.[0] || null;
+    const response = await gameApi.findGameById(id);
+    return response?.data;
   } catch (error) {
     console.error('Error fetching game data:', error);
     return null;

@@ -6,16 +6,6 @@ import { useEffect, useState } from 'react';
 // import Image from 'next/image';
 import { PlayerDTO } from '@/lib/generated';
 // import { isValidURL } from '@/app/utils/string';
-import { Paper } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'avatarUrl', headerName: 'Avatar', width: 130 },
-  { field: 'username', headerName: 'Username', width: 130 },
-  { field: 'email', headerName: 'email', width: 130 },
-  { field: 'deleted', headerName: 'deleted', width: 130 },
-];
 
 const paginationModel = { page: 0, pageSize: 5 };
 
@@ -50,16 +40,6 @@ const PlayersPage = () => {
         {!isLoading && players && (
           <>
             <span className="text-3xl font-bold">Players</span>
-            <Paper sx={{ height: 400, width: '90%' }}>
-              <DataGrid
-                rows={players}
-                columns={columns}
-                initialState={{ pagination: { paginationModel } }}
-                pageSizeOptions={[5, 10]}
-                // checkboxSelection
-                sx={{ border: 0 }}
-              />
-            </Paper>
           </>
         )}
 

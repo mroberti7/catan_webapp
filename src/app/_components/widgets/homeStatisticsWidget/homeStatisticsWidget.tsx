@@ -1,5 +1,3 @@
-import GameDiceStats from '@/app/_components/widgets/gameWidget/gameDiceStats';
-
 const data = [
   { name: '2', value: 3 },
   { name: '3', value: 4 },
@@ -15,13 +13,7 @@ const data = [
 ];
 
 const HomeStatisticsWidget = () => {
-  return (
-    <div className="flex h-full w-full items-center justify-center px-24 py-6">
-      <div className="flex h-full w-full items-center justify-center border-4 border-secondary bg-slate-400 bg-opacity-95">
-        <GameDiceStats width={630} height={270} data={data} />
-      </div>
-    </div>
-  );
+  return <div className="flex h-full w-full items-center justify-center px-24 py-6"></div>;
 };
 
 export default HomeStatisticsWidget;

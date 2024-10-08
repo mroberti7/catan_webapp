@@ -5,7 +5,7 @@ type ButtonProps = {
 
 const Button = ({ children, onClick }: ButtonProps) => {
   return (
-    <button className="rounded-xl bg-catan-red p-4 text-primary hover:bg-opacity-80" onClick={onClick} data-test-id="button">
+    <button className="rounded-xl bg-catan-red p-3 text-primary hover:bg-opacity-80 md:p-4" onClick={onClick} data-test-id="button">
       {children}
     </button>
   );

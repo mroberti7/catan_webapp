@@ -13,26 +13,30 @@ type SideMenuProps = {
 const SideMenu = ({ isOpen, openMenu }: SideMenuProps) => {
   const router = useRouter();
 
-  const menuEntries: { icon: React.ElementType; label: string; path: string }[] = [
+  const menuEntries: { icon: React.ElementType; label: string; path: string; disabled: boolean }[] = [
     {
       icon: TrophyIcon,
       label: 'Games',
       path: ROUTES.GAMES.pathname,
+      disabled: false,
     },
     {
       icon: UsersIcon,
       label: 'Players',
       path: ROUTES.PLAYERS.pathname,
+      disabled: true,
     },
     {
       icon: ChartBarIcon,
       label: 'Statistics',
       path: ROUTES.STATISTICS.pathname,
+      disabled: true,
     },
     {
       icon: WrenchScrewdriverIcon,
       label: 'Settings',
       path: ROUTES.SETTINGS.pathname,
+      disabled: true,
     },
   ];
 
@@ -46,28 +50,33 @@ const SideMenu = ({ isOpen, openMenu }: SideMenuProps) => {
         </button>
       </div>
 
-      <div className="my-4 ml-3 flex flex-col gap-8">
+      <div className="my-4 flex flex-col gap-8">
         <div className="mb-3 flex items-center justify-center gap-2">
           <button onClick={() => router.push(ROUTES.HOME.pathname)}>
             <Image src="/assets/catan-logo.png" alt="logo" width={100} height={100} />
           </button>
         </div>
-        {menuEntries.map((entry, index) => (
-          <button key={index} className="flex items-center justify-center gap-3" onClick={() => router.push(entry.path)}>
-            <entry.icon className="size-7 text-secondary md:size-8" />
-            <span className="text-lg font-medium text-secondary md:text-xl">{entry.label}</span>
-          </button>
-        ))}
-        {/* <div className="mt-16">
-          <Ping showTriggerButton />
-        </div> */}
-        <div className="fixed bottom-0 mb-3 flex w-full flex-col items-center gap-2">
+        {menuEntries.map((entry, index) =>
+          entry.disabled ? (
+            <div className="flex items-center justify-center gap-3">
+              <entry.icon className="size-7 text-gray-300 md:size-8" />
+              <span className="text-lg font-medium text-gray-300 md:text-xl">{entry.label}</span>
+            </div>
+          ) : (
+            <button key={index} className="flex items-center justify-center gap-3" onClick={() => router.push(entry.path)}>
+              <entry.icon className="size-7 text-secondary md:size-8" />
+              <span className="text-lg font-medium text-secondary md:text-xl">{entry.label}</span>
+            </button>
+          ),
+        )}
+        <div className="fixed bottom-0 flex w-full flex-col items-center gap-2 pb-8">
           <a href="https://github.com/fdifrison" target="_blank" className="text-xs text-secondary">
             fdifrison
           </a>
           <a href="https://github.com/mroberti7" target="_blank" className="text-xs text-secondary">
             mroberti7
           </a>
+          <span className="text-xs text-primary">Developed with ❤️ during working hours</span>
         </div>
       </div>
     </div>

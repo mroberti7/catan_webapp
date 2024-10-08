@@ -90,6 +90,7 @@ const NewGameModal = ({ isModalOpen, onClose }: NewGameModalProps) => {
   useEffect(() => {
     const fetchPlayers = async () => {
       const playersData = await getPlayers();
+      console.log('playersData', playersData);
       if (playersData?.length) {
         setAllPlayers(playersData);
       } else {
@@ -103,7 +104,7 @@ const NewGameModal = ({ isModalOpen, onClose }: NewGameModalProps) => {
 
   return (
     <Modal isModalOpen={isModalOpen} onClose={onClose}>
-      <div className="max-w-dvw flex max-h-dvh min-h-[35rem] min-w-[35rem] flex-col items-center justify-start gap-5 rounded-2xl border-4 border-catan-red p-4">
+      <div className="flex h-auto w-auto flex-col items-center justify-start gap-5 rounded-2xl border-4 border-catan-red p-4">
         <h1 className="text-lg font-bold">New Game</h1>
         <NewGameSelectName gameName={gameName} setGameName={setGameName} />
         <NewGameSelectPlayer

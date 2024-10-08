@@ -36,7 +36,6 @@ const NewGameSelectPlayer = ({
   }
 
   const handleSetPlayerAndColor = (player: PlayerDTO, addToSelectedPlayers: boolean, addColorToPlayer: boolean) => {
-    //TODO: rework
     if (addColorToPlayer) {
       setPlayersColors([...playersColors, { playerId: player.id ?? -1, color: getRandomColor() }]);
     } else {
@@ -60,11 +59,11 @@ const NewGameSelectPlayer = ({
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <div className="flex items-center justify-between gap-4">
-        <div className="border-1 flex h-[23rem] w-[15rem] flex-col items-center justify-start overflow-y-scroll rounded-md border-primary bg-catan-red bg-opacity-45 pb-4">
-          <div className="text-md fixed z-20 flex h-[3rem] w-[15rem] items-center justify-center rounded-t-md bg-catan-red font-bold text-primary">
+        <div className="border-1 flex w-[15rem] flex-col items-center justify-start overflow-y-scroll rounded-md border-primary bg-catan-red bg-opacity-45 pb-4">
+          <div className="text-md z-20 flex h-[3rem] w-[15rem] items-center justify-center rounded-t-md bg-catan-red font-bold text-primary">
             Select Player
           </div>
-          <div className="mt-14 flex flex-col items-start gap-2">
+          <div className="mt-4 flex h-[18rem] flex-col items-start gap-2">
             {allPlayers?.map(player => (
               <div className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-black p-1" key={player.id}>
                 {player.avatarUrl && <Image src={player.avatarUrl} alt={player.username ?? 'userAvatar'} width={40} height={40} />}
@@ -76,11 +75,11 @@ const NewGameSelectPlayer = ({
             ))}
           </div>
         </div>
-        <div className="border-1 flex h-[23rem] w-[15rem] flex-col items-center justify-start overflow-y-scroll rounded-md border-primary bg-catan-red bg-opacity-45 pb-4">
-          <div className="text-md fixed z-20 flex h-[3rem] w-[15rem] items-center justify-center rounded-t-md bg-catan-red font-bold text-primary">
+        <div className="border-1 flex w-[15rem] flex-col items-center justify-start overflow-y-scroll rounded-md border-primary bg-catan-red bg-opacity-45 pb-4">
+          <div className="text-md z-20 flex h-[3rem] w-[15rem] items-center justify-center rounded-t-md bg-catan-red font-bold text-primary">
             Selected Player (ordered)
           </div>
-          <div className="mt-14 flex flex-col items-start gap-2">
+          <div className="mt-4 flex h-[18rem] flex-col items-start gap-2">
             {selectedPlayers?.map(player => (
               <div className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-black p-1" key={player.id}>
                 <div className="flex w-full items-center justify-between gap-3">

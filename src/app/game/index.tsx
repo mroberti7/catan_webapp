@@ -7,12 +7,11 @@ import { getGameById } from '@/app/utils/api/api';
 import GameWidget from '@/app/_components/widgets/gameWidget';
 import ComposedLayout from '@/app/_components/layouts';
 import { useEffect, useState } from 'react';
-import { GameDTO, PageGameDTO } from '@/lib/generated';
+import { GameDTO } from '@/lib/generated';
 import Loader from '@/app/_components/loader/loader';
 import { Scenario } from '@/enum';
 
 const Game = () => {
-  //TODO: fetch also GamePlayers and all other game info until it's everything under a single endpoint?
   const router = useRouter();
   const searchParams = useSearchParams();
   const [game, setGame] = useState<GameDTO | null>(null); //TODO: CHANGE type

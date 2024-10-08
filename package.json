@@ -17,18 +17,13 @@
     "generate-api": "openapi-generator-cli generate -i src/lib/catan-api-docs.json -g typescript-axios -o src/lib/generated"
   },
   "dependencies": {
-    "@emotion/react": "^11.13.3",
-    "@emotion/styled": "^11.13.0",
     "@heroicons/react": "^2.1.5",
-    "@mui/material": "^6.1.1",
-    "@mui/x-data-grid": "^7.18.0",
     "@next/font": "^14.2.13",
     "@openapitools/openapi-generator-cli": "^2.13.12",
     "axios": "^1.7.7",
     "next": "14.2.13",
     "react": "^18",
-    "react-dom": "^18",
-    "recharts": "^2.12.7"
+    "react-dom": "^18"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.5.0",

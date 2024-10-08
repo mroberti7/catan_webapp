@@ -1,4 +1,4 @@
-import { GamePlayer, PlayerDTO } from '@/lib/generated';
+import { GameInfoDTO, GamePlayerDTO, PlayerDTO } from '@/lib/generated';
 import { Dispatch, SetStateAction, useState } from 'react';
 import Image from 'next/image';
 import {
@@ -15,113 +15,84 @@ import { PlayerColor } from '@/enum';
 import { formatDate } from '@/app/utils/date';
 
 type GamePlayersProps = {
-  gameInfo: { gameName: string; startTimestamp: string; endTimestamp: string; requiredVictoryPoints: number };
-  players: PlayerDTO[];
+  gameInfo: GameInfoDTO;
+  players: GamePlayerDTO[];
   showPlayers: boolean;
   setShowPlayers: Dispatch<SetStateAction<boolean>>;
 };
 
 const GamePlayers = ({ gameInfo, players, showPlayers, setShowPlayers }: GamePlayersProps) => {
-  const [playersMock] = useState<PlayerDTO[]>(
-    !!players.length
-      ? players
-      : [
-          {
-            id: 1,
-            username: 'Sheldon Cooper',
-            email: 'twanna@email.com',
-            avatarUrl: 'https://robohash.org/wcnlbkzp.png',
-            deleted: false,
-          },
-          {
-            id: 2,
-            username: 'Leonard Hofstadter',
-            email: 'luis@email.com',
-            avatarUrl: 'https://robohash.org/dctpgxnh.png',
-            deleted: false,
-          },
-          {
-            id: 3,
-            username: 'Leslie Winkle',
-            email: 'delmar@email.com',
-            avatarUrl: 'https://robohash.org/odfonldg.png',
-            deleted: false,
-          },
-          {
-            id: 4,
-            username: 'Sheldon Cooper',
-            email: 'eddy@email.com',
-            avatarUrl: 'https://robohash.org/sentetyk.png',
-            deleted: false,
-          },
-        ],
-  );
-
-  const playerColor = PlayerColor.Blue; //TODO: obtain from player
-
   return (
     <>
       <div
         id="players"
-        className={`fixed mb-2 flex w-full flex-col overflow-hidden bg-gradient-to-b from-slate-600/80 to-slate-600/5 px-2 transition-all duration-500 ${showPlayers ? 'max-h-[100vh] opacity-100' : 'max-h-0 opacity-0'}`}
+        className={`flex w-full flex-col overflow-hidden bg-gradient-to-b from-slate-600/80 to-slate-600/5 px-2 transition-all duration-500 ${showPlayers ? 'max-h-[100vh] opacity-100' : 'max-h-0 opacity-0'}`}
       >
         {showPlayers ? (
           <>
-            <div id="game-info" className="flex w-full items-center justify-between px-3 pt-2">
-              <span> Start: {formatDate(gameInfo.startTimestamp)}</span>
+            <div id="game-info" className="flex w-full flex-wrap items-center justify-center gap-3 px-3 pt-8 md:justify-between md:pt-2">
+              {/* TODO: remove any */}
+              <span> Start: {formatDate((gameInfo as any).startTimestamp)}</span>
               <h1> {gameInfo.gameName}</h1>
               <div className="flex items-center gap-1">
                 <TrophyIcon className="size-4" />
                 {gameInfo.requiredVictoryPoints}
               </div>
-              <span> {gameInfo.endTimestamp ? `End: ${formatDate(gameInfo.endTimestamp)}` : 'Match in progress'}</span>
+              {/* TODO: remove any */}
+              <div>Turn: {(gameInfo as any).turnNumber}</div>
+              <span> {(gameInfo as any).endTimestamp ? `End: ${formatDate((gameInfo as any).endTimestamp)}` : 'Match in progress'}</span>
             </div>
-            <div className="flex w-full justify-between gap-3 px-2 py-2">
-              {playersMock.map(player => (
-                <div key={player.id} className="flex justify-start">
+            <div className="flex w-full flex-wrap justify-center gap-6 px-2 py-2 lg:gap-12">
+              {players.map(player => (
+                <div key={player.playerId} className="flex justify-start">
                   {player.avatarUrl && (
-                    <Image
-                      src={player.avatarUrl}
-                      alt={player.username ?? 'userAvatar'}
-                      width={90}
-                      height={90}
-                      className="opacity-b-80 rounded-lg border-4 border-yellow-600"
-                      style={{ backgroundColor: playerColor }}
-                    />
+                    <div className="relative flex size-20">
+                      <Image
+                        src={player.avatarUrl}
+                        alt={player.username ?? 'userAvatar'}
+                        fill
+                        className="opacity-b-80 rounded-lg border-4 border-yellow-600"
+                        style={{ backgroundColor: player.playerColor }}
+                      />
+                    </div>
                   )}
                   <div className="w-full">
                     <div
                       className="mt-1 flex w-full items-center justify-between rounded-e-md border-y-2 border-r-2 border-yellow-600 px-2"
-                      style={{ backgroundColor: playerColor }}
+                      style={{ backgroundColor: player.playerColor }}
                     >
                       <h1 className="text-md col-span-3 text-wrap font-bold">{player.username}</h1>
                       <span className="text-md flex items-center gap-1 font-bold">
-                        <TrophyIcon className="size-5" /> 10
+                        <TrophyIcon className="size-5" /> {player.plainScore}
                       </span>
                     </div>
                     <div
-                      className="mb-2 mr-2 flex justify-between gap-2 rounded-br-md bg-opacity-70 p-2"
-                      style={{ backgroundColor: playerColor }}
+                      className="mb-2 mr-2 flex justify-between gap-2 rounded-b-md bg-opacity-70 p-2"
+                      style={{ backgroundColor: player.playerColor }}
                     >
                       <div className="flex flex-col items-center justify-center gap-2">
                         <BuildingLibraryIcon className="size-5" />
-                        <span>5</span>
+                        <span>{player.coloniesBuilt}</span>
                       </div>
                       <div className="flex flex-col items-center justify-center gap-2">
                         <BuildingOffice2Icon className="size-5" />
-                        <span>4</span>
+                        <span>{player.citiesBuilt}</span>
                       </div>
-                      <div className="flex flex-col items-center justify-center gap-2">
+                      <div
+                        className={`flex flex-col items-center justify-center gap-2 ${player.longestRoad ? 'animate-blink rounded-xl border-2 border-transparent p-1' : ''}`}
+                      >
                         <ArrowTrendingUpIcon className="size-5" />
-                        <span>9</span>
+                        <span>{player.roadsBuilt}</span>
                       </div>
-                      <div className="flex flex-col items-center justify-center gap-2">
+                      <div
+                        className={`flex flex-col items-center justify-center gap-2 ${player.largestArmy ? 'animate-blink rounded-xl border-2 border-transparent p-1' : ''}`}
+                      >
                         <ScissorsIcon className="size-5" />
-                        <span>2</span>
+                        <span>{player.knightCardPlayed}</span>
                       </div>
                       <div className="flex flex-col items-center justify-center gap-2">
                         <QuestionMarkCircleIcon className="size-5" />
-                        <span>3</span>
+                        <span>{player.developCardDrawn}</span>
                       </div>
                     </div>
                   </div>
@@ -139,16 +110,16 @@ const GamePlayers = ({ gameInfo, players, showPlayers, setShowPlayers }: GamePla
 
       {!showPlayers && (
         <div className="flex w-full flex-col">
-          <div className="flex w-full justify-between gap-10 bg-gradient-to-b from-slate-600/80 to-slate-600/10 px-6 pb-1">
-            {playersMock.map(player => (
+          <div className="flex w-full flex-wrap justify-center gap-3 bg-gradient-to-b from-slate-600/80 to-slate-600/10 px-6 pb-1 md:flex-nowrap md:gap-10">
+            {players.map(player => (
               <div
-                key={player.id}
+                key={player.playerId}
                 className="mt-1 flex w-full items-center justify-between rounded-md border-2 border-y-2 border-yellow-600 px-2"
-                style={{ backgroundColor: playerColor }}
+                style={{ backgroundColor: player.playerColor }}
               >
                 <h1 className="text-md col-span-3 text-wrap font-bold">{player.username}</h1>
                 <span className="text-md flex items-center gap-1 font-bold">
-                  <TrophyIcon className="size-5" /> 10
+                  <TrophyIcon className="size-5" /> {player.plainScore}
                 </span>
               </div>
             ))}

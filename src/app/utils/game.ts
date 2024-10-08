@@ -24,7 +24,6 @@ export const createGameData = ({
     gameInfo: {
       gameName: gameName,
       gameType: scenario,
-      numberOfPlayers: playersIds.length,
       requiredVictoryPoints: victoryPoints,
     },
     playersInfo: playersIds.map((playerId, index) => {

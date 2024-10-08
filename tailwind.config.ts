@@ -21,12 +21,17 @@ const config: Config = {
         'catan-bg': "url('/assets/catan-bg-2.png')",
       },
       animation: {
+        blink: 'blink 3s infinite',
         'ltr-linear-infinite': 'ltr-linear-infinite 50s linear infinite',
         slideRight: 'slideRight 0.90s ease-in',
         slideLeft: 'slideLeft 0.90s ease-out',
         slideBottom: 'slideBottom 0.30s ease-in',
       },
       keyframes: {
+        blink: {
+          '0%, 100%': { borderColor: 'transparent' },
+          '50%': { borderColor: 'black' },
+        },
         'ltr-linear-infinite': {
           from: { 'background-position': '0 0' },
           to: { 'background-position': '500% 0%' },
