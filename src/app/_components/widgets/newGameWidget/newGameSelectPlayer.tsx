@@ -58,28 +58,32 @@ const NewGameSelectPlayer = ({
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      <div className="flex items-center justify-between gap-4">
-        <div className="border-1 flex w-[15rem] flex-col items-center justify-start overflow-y-scroll rounded-md border-primary bg-catan-red bg-opacity-45 pb-4">
-          <div className="text-md z-20 flex h-[3rem] w-[15rem] items-center justify-center rounded-t-md bg-catan-red font-bold text-primary">
+      <div className="flex items-center justify-between gap-1 md:gap-4">
+        <div className="border-1 flex min-w-[9rem] flex-col items-center justify-start overflow-y-scroll rounded-md border-primary bg-catan-red bg-opacity-45 pb-4 md:min-w-[14rem]">
+          <div className="md:text-md z-20 flex h-[3rem] w-full items-center justify-center rounded-t-md bg-catan-red text-sm font-bold text-primary">
             Select Player
           </div>
-          <div className="mt-4 flex h-[18rem] flex-col items-start gap-2">
+          <div className="mt-4 flex h-[14rem] flex-col items-start gap-2 md:h-[18rem]">
             {allPlayers?.map(player => (
               <div className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-black p-1" key={player.id}>
-                {player.avatarUrl && <Image src={player.avatarUrl} alt={player.username ?? 'userAvatar'} width={40} height={40} />}
+                {player.avatarUrl && (
+                  <div className="relative flex size-6 items-center justify-center md:size-9">
+                    <Image src={player.avatarUrl} alt={player.username ?? 'userAvatar'} fill />
+                  </div>
+                )}
                 <span className="text-sm">{player.username}</span>
                 <button className="rounded-md bg-catan-red hover:bg-opacity-80" onClick={() => handleSetPlayerAndColor(player, true, true)}>
-                  <ArrowRightIcon className="text-bold size-8 text-primary" />
+                  <ArrowRightIcon className="text-bold size-5 text-primary md:size-8" />
                 </button>
               </div>
             ))}
           </div>
         </div>
-        <div className="border-1 flex w-[15rem] flex-col items-center justify-start overflow-y-scroll rounded-md border-primary bg-catan-red bg-opacity-45 pb-4">
-          <div className="text-md z-20 flex h-[3rem] w-[15rem] items-center justify-center rounded-t-md bg-catan-red font-bold text-primary">
+        <div className="border-1 flex min-w-[9rem] flex-col items-center justify-start overflow-y-scroll rounded-md border-primary bg-catan-red bg-opacity-45 pb-4 md:min-w-[14rem]">
+          <div className="md:text-md z-20 flex h-[3rem] w-full items-center justify-center rounded-t-md bg-catan-red text-sm font-bold text-primary">
             Selected Player (ordered)
           </div>
-          <div className="mt-4 flex h-[18rem] flex-col items-start gap-2">
+          <div className="mt-4 flex h-[14rem] flex-col items-start gap-2 md:h-[18rem]">
             {selectedPlayers?.map(player => (
               <div className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-black p-1" key={player.id}>
                 <div className="flex w-full items-center justify-between gap-3">
@@ -87,7 +91,7 @@ const NewGameSelectPlayer = ({
                     className="rounded-md bg-catan-red hover:bg-opacity-80"
                     onClick={() => handleSetPlayerAndColor(player, false, false)}
                   >
-                    <ArrowLeftIcon className="text-bold size-8 text-primary" />
+                    <ArrowLeftIcon className="text-bold size-5 text-primary md:size-8" />
                   </button>{' '}
                   <span className="text-sm">{player.username}</span>
                   <button
@@ -95,7 +99,11 @@ const NewGameSelectPlayer = ({
                     className="rounded-md hover:bg-opacity-80"
                     style={{ backgroundColor: playersColors.find(color => color.playerId === player.id)?.color }}
                   >
-                    {player.avatarUrl && <Image src={player.avatarUrl} alt={player.username ?? 'userAvatar'} width={40} height={40} />}
+                    {player.avatarUrl && (
+                      <div className="relative flex size-6 items-center justify-center md:size-9">
+                        <Image src={player.avatarUrl} alt={player.username ?? 'userAvatar'} fill />
+                      </div>
+                    )}
                   </button>
                 </div>
               </div>

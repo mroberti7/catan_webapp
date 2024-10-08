@@ -40,7 +40,7 @@ const Game = () => {
         className="flex h-full w-full flex-col items-center justify-center gap-4 bg-cover bg-bottom bg-no-repeat"
         style={{
           backgroundImage: `url('/assets/wallpapers/wallpaper-${
-            (game as any)?.scenario === Scenario.Seafarers ? 'seafarers' : 'settlers'
+            game?.gameInfo.gameType === Scenario.Seafarers ? 'seafarers' : 'settlers'
           }.png')`,
         }}
       >
