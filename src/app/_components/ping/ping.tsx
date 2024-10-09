@@ -1,4 +1,4 @@
-import { checkServerStatus } from '@/app/utils/api/api';
+import { checkServerStatus } from '@/app/utils/api';
 import { useEffect, useState } from 'react';
 
 type PingProps = {

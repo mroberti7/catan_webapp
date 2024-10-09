@@ -1,5 +1,5 @@
-import { GameInfoDTO, GamePlayerDTO, PlayerDTO } from '@/lib/generated';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { GameInfoDTO, GamePlayerDTO } from '@/lib/generated';
+import { Dispatch, SetStateAction } from 'react';
 import Image from 'next/image';
 import {
   ArrowTrendingUpIcon,
@@ -11,7 +11,6 @@ import {
   ScissorsIcon,
   TrophyIcon,
 } from '@heroicons/react/24/outline';
-import { PlayerColor } from '@/enum';
 import { formatDate } from '@/app/utils/date';
 
 type GamePlayersProps = {

@@ -5,7 +5,8 @@ import GamePlayers from '@/app/_components/widgets/gameWidget/gamePlayers';
 import { useEffect, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import GameActions from '@/app/_components/widgets/gameWidget/gameActions';
-import { getGameById, saveTurn } from '@/app/utils/api/api';
+import { getGameById, saveTurn } from '@/app/utils/api';
+import GameDice from '@/app/_components/widgets/gameWidget/gameDice';
 
 type GameWidgetProps = {
   initialGame: GameDTO;
@@ -15,8 +16,10 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
   const [game, setGame] = useState<GameDTO>(initialGame);
   const [showPlayers, setShowPlayers] = useState(true);
   const [currentPlayerIdToPlay, setCurrentPlayerIdToPlay] = useState(game?.gamePlayers?.[0]?.playerId ?? 0);
+  const [diceNumber, setDiceNumber] = useState(-1);
 
   const passTurn = async (turn: TurnDTO) => {
+    turn.outcome = diceNumber;
     const response = await saveTurn(game.gameInfo.id ?? 0, turn);
     if (response) {
       console.log('Turn saved correctly');
@@ -29,6 +32,8 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
     } else {
       console.error('Error retrieving game');
     }
+    setDiceNumber(-1);
+    //TODO: api per aggiornare il grafico
   };
 
   useEffect(() => {
@@ -47,6 +52,9 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
       />
       <div id="game-actions" className="flex h-auto w-full items-start justify-between">
         {game?.gameInfo?.id && <GameActions gameId={game.gameInfo.id} playerId={currentPlayerIdToPlay} passTurn={passTurn} />}
+      </div>
+      <div id="game-dice" className="mb-10">
+        <GameDice gameId={game.gameInfo.id ?? -1} diceNumber={diceNumber} setDiceNumber={setDiceNumber} />
       </div>
     </div>
   );

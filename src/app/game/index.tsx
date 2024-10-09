@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { notFound } from 'next/navigation';
 import { ROUTES } from '@/routes';
-import { getGameById } from '@/app/utils/api/api';
+import { getGameById } from '@/app/utils/api';
 import GameWidget from '@/app/_components/widgets/gameWidget';
 import ComposedLayout from '@/app/_components/layouts';
 import { useEffect, useState } from 'react';

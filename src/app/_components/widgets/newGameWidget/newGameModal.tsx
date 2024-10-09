@@ -1,5 +1,5 @@
 import Modal from '@/app/_components/modal/modal';
-import { createGame, getPlayers } from '@/app/utils/api/api';
+import { createGame, getPlayers } from '@/app/utils/api';
 import { GamePlayerInfoDTO, PlayerDTO } from '@/lib/generated';
 import { useState, useEffect } from 'react';
 import Button from '@/app/_components/button/button';

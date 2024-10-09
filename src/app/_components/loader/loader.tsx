@@ -3,7 +3,7 @@ import './loaderStyle.css'; // or wherever you added the custom CSS
 
 const Loader = () => {
   return (
-    <div className="dice-container">
+    <div className="dice-container p-4">
       <div className="dice">
         {/* Face 1 */}
         <div className="dice-face dice-face-1">

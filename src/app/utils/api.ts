@@ -7,12 +7,14 @@ import {
   GameSetupDTO,
   GameInfoDTO,
   TurnDTO,
+  StatisticsControllerApi,
 } from '@/lib/generated';
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const playerApi = new PlayerControllerApi(undefined, BASE_URL);
 const serverStatusApi = new ServerStatusApi(undefined, BASE_URL);
 const gameApi = new GameControllerApi(undefined, BASE_URL);
+const statisticsApi = new StatisticsControllerApi(undefined, BASE_URL);
 
 export const checkServerStatus = async (): Promise<boolean> => {
   try {
@@ -70,6 +72,16 @@ export const saveTurn = async (gameId: number, turn: TurnDTO): Promise<boolean |
     return response?.status === 200;
   } catch (error) {
     console.error('Error saving turn:', error);
+    return null;
+  }
+};
+
+export const getGameDiceStats = async (gameId: number): Promise<{ [key: string]: { [key: string]: number } } | null> => {
+  try {
+    const response = await statisticsApi.getGameDiceDashboard(gameId);
+    return response?.data;
+  } catch (error) {
+    console.error('Error fetching game dice stats:', error);
     return null;
   }
 };

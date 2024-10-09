@@ -1,7 +1,7 @@
 'use client';
 import ComposedLayout from '@/app/_components/layouts';
 import Loader from '@/app/_components/loader/loader';
-import { getPlayers } from '@/app/utils/api/api';
+import { getPlayers } from '@/app/utils/api';
 import { useEffect, useState } from 'react';
 // import Image from 'next/image';
 import { PlayerDTO } from '@/lib/generated';
