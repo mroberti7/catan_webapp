@@ -31,16 +31,14 @@ const GamePlayers = ({ gameInfo, players, showPlayers, setShowPlayers }: GamePla
         {showPlayers ? (
           <>
             <div id="game-info" className="flex w-full flex-wrap items-center justify-center gap-3 px-3 pt-8 md:justify-between md:pt-2">
-              {/* TODO: remove any */}
-              <span> Start: {formatDate((gameInfo as any).startTimestamp)}</span>
+              <span> Start: {formatDate(gameInfo.startTimestamp)}</span>
               <h1> {gameInfo.gameName}</h1>
               <div className="flex items-center gap-1">
                 <TrophyIcon className="size-4" />
                 {gameInfo.requiredVictoryPoints}
               </div>
-              {/* TODO: remove any */}
-              <div>Turn: {(gameInfo as any).turnNumber}</div>
-              <span> {(gameInfo as any).endTimestamp ? `End: ${formatDate((gameInfo as any).endTimestamp)}` : 'Match in progress'}</span>
+              <div>Turn: {gameInfo.turnNumber}</div>
+              <span> {gameInfo.endTimestamp ? `End: ${formatDate(gameInfo.endTimestamp)}` : 'Match in progress'}</span>
             </div>
             <div className="flex w-full flex-wrap justify-center gap-6 px-2 py-2 lg:gap-12">
               {players.map(player => (

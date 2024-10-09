@@ -43,11 +43,17 @@ export interface GameDTO {
     'gamePlayers': Array<GamePlayerDTO>;
 }
 /**
- * Basic info about the game
+ * 
  * @export
  * @interface GameInfoDTO
  */
 export interface GameInfoDTO {
+    /**
+     * 
+     * @type {number}
+     * @memberof GameInfoDTO
+     */
+    'id'?: number;
     /**
      * 
      * @type {string}
@@ -65,7 +71,25 @@ export interface GameInfoDTO {
      * @type {number}
      * @memberof GameInfoDTO
      */
+    'turnNumber'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof GameInfoDTO
+     */
     'requiredVictoryPoints'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof GameInfoDTO
+     */
+    'startTimestamp': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GameInfoDTO
+     */
+    'endTimestamp'?: string;
 }
 
 export const GameInfoDTOGameTypeEnum = {
@@ -217,10 +241,10 @@ export interface GamePlayerInfoDTO {
 export interface GameSetupDTO {
     /**
      * 
-     * @type {GameInfoDTO}
+     * @type {SetupDTO}
      * @memberof GameSetupDTO
      */
-    'gameInfo': GameInfoDTO;
+    'gameInfo': SetupDTO;
     /**
      * 
      * @type {Array<GamePlayerInfoDTO>}
@@ -231,191 +255,71 @@ export interface GameSetupDTO {
 /**
  * 
  * @export
- * @interface PageGameInfoDTO
+ * @interface PageMetadata
  */
-export interface PageGameInfoDTO {
+export interface PageMetadata {
     /**
      * 
      * @type {number}
-     * @memberof PageGameInfoDTO
+     * @memberof PageMetadata
      */
-    'totalPages'?: number;
+    'size'?: number;
     /**
      * 
      * @type {number}
-     * @memberof PageGameInfoDTO
+     * @memberof PageMetadata
+     */
+    'number'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageMetadata
      */
     'totalElements'?: number;
     /**
      * 
      * @type {number}
-     * @memberof PageGameInfoDTO
+     * @memberof PageMetadata
      */
-    'size'?: number;
+    'totalPages'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface PagedModelGameInfoDTO
+ */
+export interface PagedModelGameInfoDTO {
     /**
      * 
      * @type {Array<GameInfoDTO>}
-     * @memberof PageGameInfoDTO
+     * @memberof PagedModelGameInfoDTO
      */
     'content'?: Array<GameInfoDTO>;
     /**
      * 
-     * @type {number}
-     * @memberof PageGameInfoDTO
+     * @type {PageMetadata}
+     * @memberof PagedModelGameInfoDTO
      */
-    'number'?: number;
-    /**
-     * 
-     * @type {Array<SortObject>}
-     * @memberof PageGameInfoDTO
-     */
-    'sort'?: Array<SortObject>;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageGameInfoDTO
-     */
-    'numberOfElements'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageGameInfoDTO
-     */
-    'first'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageGameInfoDTO
-     */
-    'last'?: boolean;
-    /**
-     * 
-     * @type {PageableObject}
-     * @memberof PageGameInfoDTO
-     */
-    'pageable'?: PageableObject;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageGameInfoDTO
-     */
-    'empty'?: boolean;
+    'page'?: PageMetadata;
 }
 /**
  * 
  * @export
- * @interface PagePlayerDTO
+ * @interface PagedModelPlayerDTO
  */
-export interface PagePlayerDTO {
-    /**
-     * 
-     * @type {number}
-     * @memberof PagePlayerDTO
-     */
-    'totalPages'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PagePlayerDTO
-     */
-    'totalElements'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PagePlayerDTO
-     */
-    'size'?: number;
+export interface PagedModelPlayerDTO {
     /**
      * 
      * @type {Array<PlayerDTO>}
-     * @memberof PagePlayerDTO
+     * @memberof PagedModelPlayerDTO
      */
     'content'?: Array<PlayerDTO>;
     /**
      * 
-     * @type {number}
-     * @memberof PagePlayerDTO
+     * @type {PageMetadata}
+     * @memberof PagedModelPlayerDTO
      */
-    'number'?: number;
-    /**
-     * 
-     * @type {Array<SortObject>}
-     * @memberof PagePlayerDTO
-     */
-    'sort'?: Array<SortObject>;
-    /**
-     * 
-     * @type {number}
-     * @memberof PagePlayerDTO
-     */
-    'numberOfElements'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PagePlayerDTO
-     */
-    'first'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PagePlayerDTO
-     */
-    'last'?: boolean;
-    /**
-     * 
-     * @type {PageableObject}
-     * @memberof PagePlayerDTO
-     */
-    'pageable'?: PageableObject;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PagePlayerDTO
-     */
-    'empty'?: boolean;
-}
-/**
- * 
- * @export
- * @interface PageableObject
- */
-export interface PageableObject {
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'offset'?: number;
-    /**
-     * 
-     * @type {Array<SortObject>}
-     * @memberof PageableObject
-     */
-    'sort'?: Array<SortObject>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageableObject
-     */
-    'paged'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'pageSize'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'pageNumber'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageableObject
-     */
-    'unpaged'?: boolean;
+    'page'?: PageMetadata;
 }
 /**
  * Player Entity not related to a specific game
@@ -455,42 +359,38 @@ export interface PlayerDTO {
     'deleted'?: boolean;
 }
 /**
- * 
+ * Basic info about the game
  * @export
- * @interface SortObject
+ * @interface SetupDTO
  */
-export interface SortObject {
+export interface SetupDTO {
     /**
      * 
      * @type {string}
-     * @memberof SortObject
+     * @memberof SetupDTO
      */
-    'direction'?: string;
+    'gameName': string;
     /**
      * 
      * @type {string}
-     * @memberof SortObject
+     * @memberof SetupDTO
      */
-    'nullHandling'?: string;
+    'gameType': SetupDTOGameTypeEnum;
     /**
      * 
-     * @type {boolean}
-     * @memberof SortObject
+     * @type {number}
+     * @memberof SetupDTO
      */
-    'ascending'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof SortObject
-     */
-    'property'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SortObject
-     */
-    'ignoreCase'?: boolean;
+    'requiredVictoryPoints'?: number;
 }
+
+export const SetupDTOGameTypeEnum = {
+    Standard: 'STANDARD',
+    Seafarers: 'SEAFARERS'
+} as const;
+
+export type SetupDTOGameTypeEnum = typeof SetupDTOGameTypeEnum[keyof typeof SetupDTOGameTypeEnum];
+
 /**
  * Action performed by a specific player in a specific game
  * @export
@@ -868,7 +768,7 @@ export const GameControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async searchGames(page?: number, size?: number, sort?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageGameInfoDTO>> {
+        async searchGames(page?: number, size?: number, sort?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PagedModelGameInfoDTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.searchGames(page, size, sort, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['GameControllerApi.searchGames']?.[localVarOperationServerIndex]?.url;
@@ -939,7 +839,7 @@ export const GameControllerApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        searchGames(page?: number, size?: number, sort?: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<PageGameInfoDTO> {
+        searchGames(page?: number, size?: number, sort?: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<PagedModelGameInfoDTO> {
             return localVarFp.searchGames(page, size, sort, options).then((request) => request(axios, basePath));
         },
     };
@@ -1242,7 +1142,7 @@ export const PlayerControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async search(username?: string, email?: string, deleted?: boolean, page?: number, size?: number, sort?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PagePlayerDTO>> {
+        async search(username?: string, email?: string, deleted?: boolean, page?: number, size?: number, sort?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PagedModelPlayerDTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.search(username, email, deleted, page, size, sort, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['PlayerControllerApi.search']?.[localVarOperationServerIndex]?.url;
@@ -1300,7 +1200,7 @@ export const PlayerControllerApiFactory = function (configuration?: Configuratio
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        search(username?: string, email?: string, deleted?: boolean, page?: number, size?: number, sort?: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<PagePlayerDTO> {
+        search(username?: string, email?: string, deleted?: boolean, page?: number, size?: number, sort?: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<PagedModelPlayerDTO> {
             return localVarFp.search(username, email, deleted, page, size, sort, options).then((request) => request(axios, basePath));
         },
         /**

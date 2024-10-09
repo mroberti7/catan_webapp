@@ -24,17 +24,16 @@ const GamesPage = () => {
     fetchGames();
   }, []);
 
-  //TODO: remove any
   return (
     <ComposedLayout>
       <div className="flex h-full w-full flex-col items-center justify-center gap-4">
         {isLoading && <Loader />}
         {!isLoading &&
           games.map(game => (
-            <div key={(game as any).id} className="flex items-center justify-center gap-6 rounded-md border-2 border-secondary p-3">
-              <h1>ID: {(game as any).id}</h1>
-              <h1>Start: {formatDate((game as any).startTimestamp ?? '')}</h1>
-              <Button onClick={() => router.push(getSingleGameURL((game as any).id))}>View Game</Button>
+            <div key={game.id} className="flex items-center justify-center gap-6 rounded-md border-2 border-secondary p-3">
+              <h1>ID: {game.id}</h1>
+              <h1>Start: {formatDate(game.startTimestamp ?? '')}</h1>
+              <Button onClick={() => router.push(getSingleGameURL(game.id))}>View Game</Button>
             </div>
           ))}
       </div>

@@ -67,7 +67,7 @@
           }
         ],
         "responses": {
-          "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/PagePlayerDTO" } } } }
+          "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/PagedModelPlayerDTO" } } } }
         }
       },
       "post": {
@@ -105,7 +105,7 @@
           }
         ],
         "responses": {
-          "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageGameInfoDTO" } } } }
+          "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/PagedModelGameInfoDTO" } } } }
         }
       },
       "post": {
@@ -205,16 +205,6 @@
         },
         "description": "Player state relative to a specific game"
       },
-      "GameInfoDTO": {
-        "required": ["gameName", "gameType"],
-        "type": "object",
-        "properties": {
-          "gameName": { "type": "string" },
-          "gameType": { "type": "string", "enum": ["STANDARD", "SEAFARERS"] },
-          "requiredVictoryPoints": { "minimum": 8, "type": "integer", "format": "int32" }
-        },
-        "description": "Basic info about the game"
-      },
       "GamePlayerInfoDTO": {
         "required": ["playerColor"],
         "type": "object",
@@ -230,10 +220,20 @@
         "required": ["gameInfo"],
         "type": "object",
         "properties": {
-          "gameInfo": { "$ref": "#/components/schemas/GameInfoDTO" },
+          "gameInfo": { "$ref": "#/components/schemas/SetupDTO" },
           "playersInfo": { "type": "array", "items": { "$ref": "#/components/schemas/GamePlayerInfoDTO" } }
         },
         "description": "Required info to setup a new game"
+      },
+      "SetupDTO": {
+        "required": ["gameName", "gameType"],
+        "type": "object",
+        "properties": {
+          "gameName": { "type": "string" },
+          "gameType": { "type": "string", "enum": ["STANDARD", "SEAFARERS"] },
+          "requiredVictoryPoints": { "minimum": 8, "type": "integer", "format": "int32" }
+        },
+        "description": "Basic info about the game"
       },
       "TurnDTO": {
         "type": "object",
@@ -251,57 +251,40 @@
         },
         "description": "Action performed by a specific player in a specific game"
       },
-      "PagePlayerDTO": {
+      "PageMetadata": {
         "type": "object",
         "properties": {
-          "totalPages": { "type": "integer", "format": "int32" },
+          "size": { "type": "integer", "format": "int64" },
+          "number": { "type": "integer", "format": "int64" },
           "totalElements": { "type": "integer", "format": "int64" },
-          "size": { "type": "integer", "format": "int32" },
+          "totalPages": { "type": "integer", "format": "int64" }
+        }
+      },
+      "PagedModelPlayerDTO": {
+        "type": "object",
+        "properties": {
           "content": { "type": "array", "items": { "$ref": "#/components/schemas/PlayerDTO" } },
-          "number": { "type": "integer", "format": "int32" },
-          "sort": { "type": "array", "items": { "$ref": "#/components/schemas/SortObject" } },
-          "numberOfElements": { "type": "integer", "format": "int32" },
-          "first": { "type": "boolean" },
-          "last": { "type": "boolean" },
-          "pageable": { "$ref": "#/components/schemas/PageableObject" },
-          "empty": { "type": "boolean" }
+          "page": { "$ref": "#/components/schemas/PageMetadata" }
         }
       },
-      "PageableObject": {
+      "GameInfoDTO": {
+        "required": ["gameName", "gameType", "startTimestamp"],
         "type": "object",
         "properties": {
-          "offset": { "type": "integer", "format": "int64" },
-          "sort": { "type": "array", "items": { "$ref": "#/components/schemas/SortObject" } },
-          "paged": { "type": "boolean" },
-          "pageSize": { "type": "integer", "format": "int32" },
-          "pageNumber": { "type": "integer", "format": "int32" },
-          "unpaged": { "type": "boolean" }
+          "id": { "type": "integer", "format": "int64", "readOnly": true },
+          "gameName": { "type": "string" },
+          "gameType": { "type": "string", "enum": ["STANDARD", "SEAFARERS"] },
+          "turnNumber": { "type": "integer", "format": "int32" },
+          "requiredVictoryPoints": { "minimum": 8, "type": "integer", "format": "int32" },
+          "startTimestamp": { "type": "string", "format": "date-time" },
+          "endTimestamp": { "type": "string", "format": "date-time" }
         }
       },
-      "SortObject": {
+      "PagedModelGameInfoDTO": {
         "type": "object",
         "properties": {
-          "direction": { "type": "string" },
-          "nullHandling": { "type": "string" },
-          "ascending": { "type": "boolean" },
-          "property": { "type": "string" },
-          "ignoreCase": { "type": "boolean" }
-        }
-      },
-      "PageGameInfoDTO": {
-        "type": "object",
-        "properties": {
-          "totalPages": { "type": "integer", "format": "int32" },
-          "totalElements": { "type": "integer", "format": "int64" },
-          "size": { "type": "integer", "format": "int32" },
           "content": { "type": "array", "items": { "$ref": "#/components/schemas/GameInfoDTO" } },
-          "number": { "type": "integer", "format": "int32" },
-          "sort": { "type": "array", "items": { "$ref": "#/components/schemas/SortObject" } },
-          "numberOfElements": { "type": "integer", "format": "int32" },
-          "first": { "type": "boolean" },
-          "last": { "type": "boolean" },
-          "pageable": { "$ref": "#/components/schemas/PageableObject" },
-          "empty": { "type": "boolean" }
+          "page": { "$ref": "#/components/schemas/PageMetadata" }
         }
       },
       "GameDTO": {
