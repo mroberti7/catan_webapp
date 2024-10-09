@@ -70,14 +70,28 @@ const GameDice = ({ gameId, diceNumber, setDiceNumber, players }: GameDiceProps)
   if (chartData.length === 0) return <div>No data available.</div>;
 
   return (
-    <div className="flex flex-col items-center justify-center gap-3 px-4 lg:px-10">
-      <div className="flex min-h-52 w-full flex-wrap items-center justify-center text-wrap bg-slate-400 bg-opacity-90 py-4">
+    <div className="flex flex-col items-center justify-center gap-10">
+      {/* Dice number buttons */}
+      <div className="flex flex-wrap items-center justify-center gap-3 lg:gap-5">
+        {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(number => (
+          <button
+            key={number}
+            onClick={() => setDiceNumber(number)}
+            className={`flex size-8 items-center justify-center rounded-full border-2 md:size-14 ${
+              diceNumber === number ? 'border-catan-red bg-primary text-catan-red' : 'border-primary bg-catan-red text-primary'
+            } text-md p-2 font-bold md:text-lg`}
+          >
+            {number}
+          </button>
+        ))}
+      </div>
+      <div className="flex min-h-52 w-full flex-wrap items-center justify-center text-wrap bg-slate-400 bg-opacity-50 px-4 md:px-6 lg:px-12">
         <ResponsiveContainer width="100%" height={300}>
           {/* Adding a unique key to force re-render when diceNumber changes */}
-          <ComposedChart key={diceNumber} data={chartData} margin={{ top: 10, right: 20, bottom: 10, left: 20 }}>
+          <ComposedChart key={diceNumber} data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" domain={[2, 12]} />
-            <YAxis domain={[0, 10]} />
+            <XAxis dataKey="name" domain={[2, 12]} stroke="#333" fontSize={20} strokeWidth={3} />
+            <YAxis domain={[0, 10]} stroke="#333" fontSize={20} strokeWidth={3} />
             <Tooltip />
             <Legend />
 
@@ -98,24 +112,9 @@ const GameDice = ({ gameId, diceNumber, setDiceNumber, players }: GameDiceProps)
             })}
 
             {/* Line Chart for overall dice distribution */}
-            <Line type="monotone" dataKey="distribution" stroke="#ff7300" strokeWidth={2} />
+            <Line type="monotone" dataKey="distribution" stroke="#ff7300" strokeWidth={3} />
           </ComposedChart>
         </ResponsiveContainer>
-      </div>
-
-      {/* Dice number buttons */}
-      <div className="flex flex-wrap items-center justify-center gap-3 lg:gap-5">
-        {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(number => (
-          <button
-            key={number}
-            onClick={() => setDiceNumber(number)}
-            className={`flex size-8 items-center justify-center rounded-full border-2 md:size-14 ${
-              diceNumber === number ? 'border-catan-red bg-primary text-catan-red' : 'border-primary bg-catan-red text-primary'
-            } text-md p-2 font-bold md:text-lg`}
-          >
-            {number}
-          </button>
-        ))}
       </div>
     </div>
   );

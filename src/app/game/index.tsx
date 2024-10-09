@@ -44,7 +44,11 @@ const Game = () => {
           }.png')`,
         }}
       >
-        {isLoading && <Loader />}
+        {isLoading && (
+          <div className="mt-80">
+            <Loader />
+          </div>
+        )}
         {!isLoading && (game ? <GameWidget initialGame={game} /> : <div>Game not found</div>)}
       </div>
     </ComposedLayout>

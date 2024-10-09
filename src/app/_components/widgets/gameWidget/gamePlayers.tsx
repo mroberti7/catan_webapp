@@ -40,11 +40,11 @@ const GamePlayers = ({ gameInfo, players, showPlayers, setShowPlayers, currentPl
               <div>Turn: {gameInfo?.turnNumber ?? 0 + 1}</div>
               <span> {gameInfo.endTimestamp ? `End: ${formatDate(gameInfo.endTimestamp)}` : 'Match in progress'}</span>
             </div>
-            <div className="flex w-full flex-wrap justify-center gap-6 px-2 py-2 lg:gap-12">
+            <div className="flex w-full flex-wrap justify-center gap-2 px-2 py-2 lg:gap-12">
               {players.map(player => (
                 <div key={player.playerId} className="flex justify-start">
                   {player.avatarUrl && (
-                    <div className="relative flex size-20">
+                    <div className="relative flex size-12 lg:size-24">
                       <Image
                         src={player.avatarUrl}
                         alt={player.username ?? 'userAvatar'}
@@ -54,18 +54,18 @@ const GamePlayers = ({ gameInfo, players, showPlayers, setShowPlayers, currentPl
                       />
                     </div>
                   )}
-                  <div className="w-full">
+                  <div className="-ml-1 w-full">
                     <div
-                      className="mt-1 flex w-full items-center justify-between rounded-e-md border-y-2 border-r-2 border-yellow-600 px-2"
+                      className={`mt-1 flex w-full items-center justify-between rounded-e-md border-y-2 border-r-2 ${player.playerId === currentPlayerIdToPlay ? 'animate-blink border-transparent' : 'border-yellow-600'} px-2`}
                       style={{ backgroundColor: player.playerColor }}
                     >
-                      <h1 className="text-md col-span-3 text-wrap font-bold">{player.username}</h1>
+                      <h1 className="text-md col-span-3 ml-2 text-wrap font-bold">{player.username}</h1>
                       <span className="text-md flex items-center gap-1 font-bold">
                         <TrophyIcon className="size-5" /> {player.plainScore}
                       </span>
                     </div>
                     <div
-                      className="mb-2 mr-2 flex justify-between gap-2 rounded-b-md bg-opacity-70 p-2"
+                      className="mb-2 mr-2 flex justify-between gap-1 rounded-b-md bg-opacity-70 p-1 pl-2"
                       style={{ backgroundColor: player.playerColor }}
                     >
                       <div
@@ -118,17 +118,30 @@ const GamePlayers = ({ gameInfo, players, showPlayers, setShowPlayers, currentPl
 
       {!showPlayers && (
         <div className="flex w-full flex-col">
-          <div className="flex w-full flex-wrap justify-center gap-3 bg-gradient-to-b from-slate-600/80 to-slate-600/10 px-6 pb-1 md:flex-nowrap md:gap-10">
+          <div className="flex w-full flex-wrap justify-center gap-3 bg-gradient-to-b from-slate-600/80 to-slate-600/10 px-6 py-2 pb-1 md:flex-nowrap md:gap-10">
             {players.map((player, index) => (
-              <div
-                key={player.playerId}
-                className={`mt-1 flex w-full items-center justify-between rounded-md border-2 border-y-2 px-2 ${player.playerId === currentPlayerIdToPlay ? 'animate-blink border-transparent' : 'border-yellow-600'}`}
-                style={{ backgroundColor: player.playerColor }}
-              >
-                <h1 className="text-md col-span-3 text-wrap font-bold">{player.username}</h1>
-                <span className="text-md flex items-center gap-1 font-bold">
-                  <TrophyIcon className="size-5" /> {player.plainScore}
-                </span>
+              <div className="flex items-center justify-center">
+                {player.avatarUrl && (
+                  <div className="relative flex size-10">
+                    <Image
+                      src={player.avatarUrl}
+                      alt={player.username ?? 'userAvatar'}
+                      fill
+                      className={`opacity-b-80 rounded-lg border-2 ${player.playerId === currentPlayerIdToPlay ? 'animate-blink border-transparent' : 'border-yellow-600'}`}
+                      style={{ backgroundColor: player.playerColor }}
+                    />
+                  </div>
+                )}
+                <div
+                  key={player.playerId}
+                  className={`-ml-2 mt-1 flex w-full min-w-32 items-center justify-between rounded-md border-2 border-y-2 px-2 ${player.playerId === currentPlayerIdToPlay ? 'animate-blink border-transparent' : 'border-yellow-600'}`}
+                  style={{ backgroundColor: player.playerColor }}
+                >
+                  <h1 className="text-md col-span-3 text-wrap font-bold">{player.username}</h1>
+                  <span className="text-md flex items-center gap-1 font-bold">
+                    <TrophyIcon className="size-5" /> {player.plainScore}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
