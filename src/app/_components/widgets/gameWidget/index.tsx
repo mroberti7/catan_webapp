@@ -28,6 +28,10 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
   };
 
   const endTurn = async (turn: TurnDTO) => {
+    if (diceNumber < 2) {
+      alert('Devi selezionare il dado');
+      return;
+    }
     turn.outcome = diceNumber;
     const response = await saveTurn(game.gameInfo.id ?? 0, turn);
     if (response) {
@@ -61,7 +65,7 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
   }, [game?.gameInfo?.turnNumber]);
 
   return (
-    <div className="mt-16 h-full w-full bg-slate-500 bg-opacity-10">
+    <div className="h-full w-full bg-slate-500 bg-opacity-10">
       <GamePlayers
         gameInfo={game.gameInfo}
         players={game.gamePlayers}
@@ -81,7 +85,7 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
         )}
       </div>
       <div id="game-dice" className="mb-10">
-        <GameDice gameId={game.gameInfo.id ?? -1} diceNumber={diceNumber} setDiceNumber={setDiceNumber} />
+        <GameDice gameId={game.gameInfo.id ?? -1} diceNumber={diceNumber} setDiceNumber={setDiceNumber} players={game.gamePlayers} />
       </div>
     </div>
   );

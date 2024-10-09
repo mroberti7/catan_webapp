@@ -37,7 +37,7 @@ const Game = () => {
   return (
     <ComposedLayout>
       <div
-        className="flex h-full w-full flex-col items-center justify-center gap-4 bg-cover bg-bottom bg-no-repeat"
+        className="mt-16 flex min-h-screen w-full flex-col items-center justify-start gap-4 bg-cover bg-bottom bg-no-repeat pb-16"
         style={{
           backgroundImage: `url('/assets/wallpapers/wallpaper-${
             game?.gameInfo.gameType === Scenario.Seafarers ? 'seafarers' : 'settlers'

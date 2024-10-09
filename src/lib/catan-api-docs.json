@@ -154,14 +154,7 @@
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": { "type": "object", "additionalProperties": { "type": "integer", "format": "int64" } }
-                }
-              }
-            }
+            "content": { "*/*": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/PlayerStatisticsDTO" } } } }
           }
         }
       }
@@ -250,6 +243,20 @@
           "citiesBuilt": { "minimum": 0, "type": "integer", "format": "int32" }
         },
         "description": "Action performed by a specific player in a specific game"
+      },
+      "DiceStatisticsDTO": {
+        "type": "object",
+        "properties": {
+          "diceNumber": { "uniqueItems": true, "type": "array", "items": { "type": "integer", "format": "int64" } },
+          "numberOfTime": { "type": "array", "items": { "type": "number", "format": "double" } }
+        }
+      },
+      "PlayerStatisticsDTO": {
+        "type": "object",
+        "properties": {
+          "playerId": { "type": "integer", "format": "int64" },
+          "statisticsDTO": { "$ref": "#/components/schemas/DiceStatisticsDTO" }
+        }
       },
       "PageMetadata": {
         "type": "object",

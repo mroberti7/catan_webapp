@@ -85,7 +85,11 @@ const NewGameSelectPlayer = ({
           </div>
           <div className="mt-4 flex h-[14rem] flex-col items-start gap-2 md:h-[18rem]">
             {selectedPlayers?.map(player => (
-              <div className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-black p-1" key={player.id}>
+              <div
+                className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-black p-1"
+                key={player.id}
+                style={{ backgroundColor: playersColors.find(color => color.playerId === player.id)?.color }}
+              >
                 <div className="flex w-full items-center justify-between gap-3">
                   <button
                     className="rounded-md bg-catan-red hover:bg-opacity-80"
@@ -94,11 +98,7 @@ const NewGameSelectPlayer = ({
                     <ArrowLeftIcon className="text-bold size-5 text-primary md:size-8" />
                   </button>{' '}
                   <span className="text-sm">{player.username}</span>
-                  <button
-                    onClick={() => changePlayerColor(player)}
-                    className="rounded-md hover:bg-opacity-80"
-                    style={{ backgroundColor: playersColors.find(color => color.playerId === player.id)?.color }}
-                  >
+                  <button onClick={() => changePlayerColor(player)} className="rounded-md hover:bg-opacity-80">
                     {player.avatarUrl && (
                       <div className="relative flex size-6 items-center justify-center md:size-9">
                         <Image src={player.avatarUrl} alt={player.username ?? 'userAvatar'} fill />

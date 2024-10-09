@@ -8,6 +8,7 @@ import {
   GameInfoDTO,
   TurnDTO,
   StatisticsControllerApi,
+  PlayerStatisticsDTO,
 } from '@/lib/generated';
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -98,7 +99,7 @@ export const deleteLastTurn = async (gameId: number): Promise<boolean | null> =>
   }
 };
 
-export const getGameDiceStats = async (gameId: number): Promise<{ [key: string]: { [key: string]: number } } | null> => {
+export const getGameDiceStats = async (gameId: number): Promise<PlayerStatisticsDTO[] | null> => {
   try {
     const response = await statisticsApi.getGameDiceDashboard(gameId);
     return response?.data;

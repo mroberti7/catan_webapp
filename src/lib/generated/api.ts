@@ -24,6 +24,25 @@ import type { RequestArgs } from './base';
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
 /**
+ * 
+ * @export
+ * @interface DiceStatisticsDTO
+ */
+export interface DiceStatisticsDTO {
+    /**
+     * 
+     * @type {Set<number>}
+     * @memberof DiceStatisticsDTO
+     */
+    'diceNumber'?: Set<number>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof DiceStatisticsDTO
+     */
+    'numberOfTime'?: Array<number>;
+}
+/**
  * Representation of a game and its players
  * @export
  * @interface GameDTO
@@ -357,6 +376,25 @@ export interface PlayerDTO {
      * @memberof PlayerDTO
      */
     'deleted'?: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface PlayerStatisticsDTO
+ */
+export interface PlayerStatisticsDTO {
+    /**
+     * 
+     * @type {number}
+     * @memberof PlayerStatisticsDTO
+     */
+    'playerId'?: number;
+    /**
+     * 
+     * @type {DiceStatisticsDTO}
+     * @memberof PlayerStatisticsDTO
+     */
+    'statisticsDTO'?: DiceStatisticsDTO;
 }
 /**
  * Basic info about the game
@@ -1467,7 +1505,7 @@ export const StatisticsControllerApiFp = function(configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getGameDiceDashboard(gameId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: { [key: string]: number; }; }>> {
+        async getGameDiceDashboard(gameId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PlayerStatisticsDTO>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getGameDiceDashboard(gameId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['StatisticsControllerApi.getGameDiceDashboard']?.[localVarOperationServerIndex]?.url;
@@ -1501,7 +1539,7 @@ export const StatisticsControllerApiFactory = function (configuration?: Configur
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getGameDiceDashboard(gameId: number, options?: RawAxiosRequestConfig): AxiosPromise<{ [key: string]: { [key: string]: number; }; }> {
+        getGameDiceDashboard(gameId: number, options?: RawAxiosRequestConfig): AxiosPromise<Array<PlayerStatisticsDTO>> {
             return localVarFp.getGameDiceDashboard(gameId, options).then((request) => request(axios, basePath));
         },
         /**
