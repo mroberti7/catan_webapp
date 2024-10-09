@@ -68,28 +68,38 @@ const GamePlayers = ({ gameInfo, players, showPlayers, setShowPlayers, currentPl
                       className="mb-2 mr-2 flex justify-between gap-2 rounded-b-md bg-opacity-70 p-2"
                       style={{ backgroundColor: player.playerColor }}
                     >
-                      <div className="flex flex-col items-center justify-center gap-2">
-                        <BuildingLibraryIcon className="size-5" />
-                        <span>{player.coloniesBuilt}</span>
-                      </div>
-                      <div className="flex flex-col items-center justify-center gap-2">
-                        <BuildingOffice2Icon className="size-5" />
-                        <span>{player.citiesBuilt}</span>
-                      </div>
                       <div
                         className={`flex flex-col items-center justify-center gap-2 ${player.longestRoad ? 'animate-blink rounded-xl border-2 border-transparent p-1' : ''}`}
                       >
-                        <ArrowTrendingUpIcon className="size-5" />
+                        <div className="relative flex size-5 items-center justify-center">
+                          <Image src={'/assets/icons/road.png'} alt="road" fill />
+                        </div>
                         <span>{player.roadsBuilt}</span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center gap-2">
+                        <div className="relative flex size-5 items-center justify-center">
+                          <Image src={'/assets/icons/colony.png'} alt="road" fill />
+                        </div>
+                        <span>{player.coloniesBuilt}</span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center gap-2">
+                        <div className="relative flex size-5 items-center justify-center">
+                          <Image src={'/assets/icons/city.png'} alt="road" fill />
+                        </div>
+                        <span>{player.citiesBuilt}</span>
                       </div>
                       <div
                         className={`flex flex-col items-center justify-center gap-2 ${player.largestArmy ? 'animate-blink rounded-xl border-2 border-transparent p-1' : ''}`}
                       >
-                        <ScissorsIcon className="size-5" />
+                        <div className="relative flex size-5 items-center justify-center">
+                          <Image src={'/assets/icons/knight.png'} alt="road" fill />
+                        </div>
                         <span>{player.knightCardPlayed}</span>
                       </div>
                       <div className="flex flex-col items-center justify-center gap-2">
-                        <QuestionMarkCircleIcon className="size-5" />
+                        <div className="relative flex size-5 items-center justify-center">
+                          <Image src={'/assets/icons/card.png'} alt="road" fill />
+                        </div>
                         <span>{player.developCardDrawn}</span>
                       </div>
                     </div>

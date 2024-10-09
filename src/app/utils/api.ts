@@ -46,6 +46,17 @@ export const createGame = async (gameData: GameSetupDTO): Promise<number> => {
   }
 };
 
+export const endGame = async (gameId: number): Promise<boolean | null> => {
+  //TODO:
+  try {
+    const response = await gameApi.endGame(gameId, []);
+    return response?.status === 201;
+  } catch (error) {
+    console.error('Error ending game:', error);
+    return null;
+  }
+};
+
 export const getGameById = async (id: number): Promise<GameDTO | null> => {
   try {
     const response = await gameApi.findGameById(id);
@@ -69,9 +80,20 @@ export const getAllGames = async (): Promise<GameInfoDTO[]> => {
 export const saveTurn = async (gameId: number, turn: TurnDTO): Promise<boolean | null> => {
   try {
     const response = await gameApi.newTurn(gameId, turn);
-    return response?.status === 200;
+    return response?.status === 201;
   } catch (error) {
     console.error('Error saving turn:', error);
+    return null;
+  }
+};
+
+export const deleteLastTurn = async (gameId: number): Promise<boolean | null> => {
+  try {
+    const response = await gameApi.deleteLastTurn(gameId);
+    console.log('response', response);
+    return response?.status === 204;
+  } catch (error) {
+    console.error('Error deleting last turn:', error);
     return null;
   }
 };

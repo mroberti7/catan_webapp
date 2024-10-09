@@ -14,6 +14,8 @@ const GameDice = ({ gameId, diceNumber, setDiceNumber }: GameDiceProps) => {
   const [diceStats, setDiceStats] = useState<{ [key: string]: { [key: string]: number } } | null>(null);
   const [isLoadingStats, setIsLoadingStats] = useState(false);
 
+  const distribution = diceStats?.[0];
+
   useEffect(() => {
     const fetchDiceStats = async () => {
       setIsLoadingStats(true);
