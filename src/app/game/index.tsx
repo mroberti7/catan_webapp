@@ -45,7 +45,7 @@ const Game = () => {
         }}
       >
         {isLoading && <Loader />}
-        {!isLoading && (game ? <GameWidget game={game} /> : <div>Game not found</div>)}
+        {!isLoading && (game ? <GameWidget initialGame={game} /> : <div>Game not found</div>)}
       </div>
     </ComposedLayout>
   );

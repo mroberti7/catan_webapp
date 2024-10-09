@@ -19,9 +19,10 @@ type GamePlayersProps = {
   players: GamePlayerDTO[];
   showPlayers: boolean;
   setShowPlayers: Dispatch<SetStateAction<boolean>>;
+  currentPlayerIdToPlay: number;
 };
 
-const GamePlayers = ({ gameInfo, players, showPlayers, setShowPlayers }: GamePlayersProps) => {
+const GamePlayers = ({ gameInfo, players, showPlayers, setShowPlayers, currentPlayerIdToPlay }: GamePlayersProps) => {
   return (
     <>
       <div
@@ -49,7 +50,7 @@ const GamePlayers = ({ gameInfo, players, showPlayers, setShowPlayers }: GamePla
                         src={player.avatarUrl}
                         alt={player.username ?? 'userAvatar'}
                         fill
-                        className="opacity-b-80 rounded-lg border-4 border-yellow-600"
+                        className={`opacity-b-80 rounded-lg border-4 ${player.playerId === currentPlayerIdToPlay ? 'animate-blink border-transparent' : 'border-yellow-600'}`}
                         style={{ backgroundColor: player.playerColor }}
                       />
                     </div>
@@ -109,10 +110,10 @@ const GamePlayers = ({ gameInfo, players, showPlayers, setShowPlayers }: GamePla
       {!showPlayers && (
         <div className="flex w-full flex-col">
           <div className="flex w-full flex-wrap justify-center gap-3 bg-gradient-to-b from-slate-600/80 to-slate-600/10 px-6 pb-1 md:flex-nowrap md:gap-10">
-            {players.map(player => (
+            {players.map((player, index) => (
               <div
                 key={player.playerId}
-                className="mt-1 flex w-full items-center justify-between rounded-md border-2 border-y-2 border-yellow-600 px-2"
+                className={`mt-1 flex w-full items-center justify-between rounded-md border-2 border-y-2 px-2 ${player.playerId === currentPlayerIdToPlay ? 'animate-blink border-transparent' : 'border-yellow-600'}`}
                 style={{ backgroundColor: player.playerColor }}
               >
                 <h1 className="text-md col-span-3 text-wrap font-bold">{player.username}</h1>
