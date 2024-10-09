@@ -38,7 +38,7 @@ const GamePlayers = ({ gameInfo, players, showPlayers, setShowPlayers, currentPl
                 <TrophyIcon className="size-4" />
                 {gameInfo.requiredVictoryPoints}
               </div>
-              <div>Turn: {gameInfo.turnNumber}</div>
+              <div>Turn: {gameInfo?.turnNumber ?? 0 + 1}</div>
               <span> {gameInfo.endTimestamp ? `End: ${formatDate(gameInfo.endTimestamp)}` : 'Match in progress'}</span>
             </div>
             <div className="flex w-full flex-wrap justify-center gap-6 px-2 py-2 lg:gap-12">

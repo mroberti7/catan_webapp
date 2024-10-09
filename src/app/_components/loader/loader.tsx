@@ -1,70 +1,53 @@
-import './loaderStyle.css';
+import React from 'react';
+import './loaderStyle.css'; // or wherever you added the custom CSS
 
 const Loader = () => {
   return (
-    <div className="loaderViewPort">
-      <div className="loader">
-        <div className="side front">
-          <div className="dot"></div>
+    <div className="dice-container">
+      <div className="dice">
+        {/* Face 1 */}
+        <div className="dice-face dice-face-1">
+          <div></div>
         </div>
-        <div className="side back">
-          <div className="dotContainer">
-            <div className="dot"></div>
-            <div className="dot"></div>
-            <div className="dot"></div>
-          </div>
+        {/* Face 2 */}
+        <div className="dice-face dice-face-2">
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
-        <div className="side left">
-          <div className="dotContainer">
-            <div className="dot"></div>
-            <div className="dot"></div>
-          </div>
+        {/* Face 3 */}
+        <div className="dice-face dice-face-3">
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
-        <div className="side right">
-          <div className="dotContainer">
-            <div className="subDotContainer">
-              <div className="dot"></div>
-              <div className="dot"></div>
-            </div>
-            <div className="subDotContainer">
-              <div className="dot"></div>
-              <div className="dot"></div>
-            </div>
-          </div>
+        {/* Face 4 */}
+        <div className="dice-face dice-face-4">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
-        <div className="side top">
-          <div className="dotContainer">
-            <div className="subDotContainer">
-              <div className="dot"></div>
-              <div className="dot"></div>
-            </div>
-            <div className="subDotContainer">
-              <div className="dot"></div>
-            </div>
-            <div className="subDotContainer">
-              <div className="dot"></div>
-              <div className="dot"></div>
-            </div>
-          </div>
+        {/* Face 5 */}
+        <div className="dice-face dice-face-5">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
-        <div className="side bottom">
-          <div className="dotContainer">
-            <div className="subDotContainer">
-              <div className="dot"></div>
-              <div className="dot"></div>
-            </div>
-            <div className="subDotContainer">
-              <div className="dot"></div>
-              <div className="dot"></div>
-            </div>
-            <div className="subDotContainer">
-              <div className="dot"></div>
-              <div className="dot"></div>
-            </div>
-          </div>
+        {/* Face 6 */}
+        <div className="dice-face dice-face-6">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
       </div>
     </div>
   );
 };
+
 export default Loader;
