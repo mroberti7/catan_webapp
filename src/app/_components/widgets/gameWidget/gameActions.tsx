@@ -9,6 +9,7 @@ type GameActionsProps = {
   playerId: number;
   endTurn: (turn: TurnDTO) => void;
   deletePreviousTurn: (gameId: number) => void;
+  clearCurrentTurnData: () => void;
   endGame: (gameId: number) => void;
 };
 
@@ -22,7 +23,7 @@ type PlayerActions = {
   largestArmy: boolean;
 };
 
-const GameActions = ({ gameId, playerId, endTurn, deletePreviousTurn, endGame }: GameActionsProps) => {
+const GameActions = ({ gameId, playerId, endTurn, deletePreviousTurn, endGame, clearCurrentTurnData }: GameActionsProps) => {
   const initialPlayerActions: PlayerActions = {
     roadsBuilt: 0,
     coloniesBuilt: 0,
@@ -48,20 +49,21 @@ const GameActions = ({ gameId, playerId, endTurn, deletePreviousTurn, endGame }:
       largestArmy: playerActions.largestArmy,
     };
     endTurn(turn);
-    clearCurrentTurnData();
+    clearCurrentTurnDataFromActions();
   };
 
   const deletePreviousTurnFromActions = () => {
     deletePreviousTurn(gameId);
-    clearCurrentTurnData();
+    clearCurrentTurnDataFromActions();
   };
 
   const endGameFromActions = () => {
     endGame(gameId);
-    clearCurrentTurnData();
+    clearCurrentTurnDataFromActions();
   };
-  const clearCurrentTurnData = () => {
+  const clearCurrentTurnDataFromActions = () => {
     setPlayerActions(initialPlayerActions);
+    clearCurrentTurnData();
   };
 
   return (
@@ -142,7 +144,7 @@ const GameActions = ({ gameId, playerId, endTurn, deletePreviousTurn, endGame }:
         <Button onClick={endTurnFromActions} className="rounded-xl bg-primary p-3 text-catan-red hover:bg-opacity-80 md:p-4">
           <span className="text-wrap text-sm md:text-lg">Fine turno</span>
         </Button>
-        <Button onClick={clearCurrentTurnData} className="rounded-xl bg-primary p-3 text-catan-red hover:bg-opacity-80 md:p-4">
+        <Button onClick={clearCurrentTurnDataFromActions} className="rounded-xl bg-primary p-3 text-catan-red hover:bg-opacity-80 md:p-4">
           <span className="text-wrap text-sm md:text-lg">Annulla turno corrente</span>
         </Button>
         <Button onClick={deletePreviousTurnFromActions} className="rounded-xl bg-primary p-3 text-catan-red hover:bg-opacity-80 md:p-4">

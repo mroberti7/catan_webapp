@@ -6,17 +6,19 @@ import { ResponsiveContainer, ComposedChart, CartesianGrid, XAxis, YAxis, Toolti
 
 type GameDiceProps = {
   gameId: number;
-  diceNumber: number;
-  setDiceNumber: Dispatch<SetStateAction<number>>;
+  diceNumber: null | number;
+  setDiceNumber: Dispatch<SetStateAction<null | number>>;
   players: GamePlayerDTO[];
+  refreshDiceStats: boolean; // New prop to trigger refresh
+  setRefreshDiceStats: Dispatch<SetStateAction<boolean>>; // New prop to reset the refresh trigger
 };
 
-const GameDice = ({ gameId, diceNumber, setDiceNumber, players }: GameDiceProps) => {
+const GameDice = ({ gameId, diceNumber, setDiceNumber, players, refreshDiceStats, setRefreshDiceStats }: GameDiceProps) => {
   const [diceStats, setDiceStats] = useState<PlayerStatisticsDTO[] | null>(null);
   const [isLoadingStats, setIsLoadingStats] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch the dice stats when the component mounts
+  // Fetch the dice stats when the component mounts or refresh is triggered
   useEffect(() => {
     const fetchDiceStats = async () => {
       try {
@@ -26,10 +28,14 @@ const GameDice = ({ gameId, diceNumber, setDiceNumber, players }: GameDiceProps)
         setError('Failed to fetch dice stats');
       } finally {
         setIsLoadingStats(false);
+        setRefreshDiceStats(false); // Reset the refresh trigger
       }
     };
-    fetchDiceStats();
-  }, [diceNumber]);
+
+    if (refreshDiceStats || !diceNumber) {
+      fetchDiceStats();
+    }
+  }, [diceNumber, gameId, refreshDiceStats]); // Trigger when diceNumber, gameId, or refresh trigger changes
 
   // Recalculate chart data when diceStats or diceNumber changes
   const chartData = useMemo(() => {
@@ -39,18 +45,15 @@ const GameDice = ({ gameId, diceNumber, setDiceNumber, players }: GameDiceProps)
     const distributionData = diceStats.find(stat => stat.playerId === 0)?.statisticsDTO;
     if (!distributionData || !distributionData.diceNumber) return [];
 
-    // Convert diceNumbers set to an array and map over it
     const diceNumbers = Array.isArray(distributionData.diceNumber) ? distributionData.diceNumber : Array.from(distributionData.diceNumber);
-
     const numberOfTime = distributionData.numberOfTime;
 
     return diceNumbers.map((diceNum, index) => {
       const row: any = {
         name: diceNum.toString(),
-        distribution: numberOfTime?.[index] ?? 0, // Overall distribution
+        distribution: numberOfTime?.[index] ?? 0,
       };
 
-      // Add each player's dice statistics for the specific diceNum
       diceStats.forEach(stat => {
         if (stat.playerId !== 0) {
           const playerStats = stat.statisticsDTO;
@@ -63,7 +66,7 @@ const GameDice = ({ gameId, diceNumber, setDiceNumber, players }: GameDiceProps)
 
       return row;
     });
-  }, [diceStats, diceNumber]);
+  }, [diceStats]);
 
   if (isLoadingStats) return <Loader />;
   if (error) return <div>{error}</div>;
@@ -71,7 +74,6 @@ const GameDice = ({ gameId, diceNumber, setDiceNumber, players }: GameDiceProps)
 
   return (
     <div className="flex flex-col items-center justify-center gap-10">
-      {/* Dice number buttons */}
       <div className="flex flex-wrap items-center justify-center gap-3 lg:gap-5">
         {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(number => (
           <button
@@ -87,31 +89,20 @@ const GameDice = ({ gameId, diceNumber, setDiceNumber, players }: GameDiceProps)
       </div>
       <div className="flex min-h-52 w-full flex-wrap items-center justify-center text-wrap bg-slate-400 bg-opacity-50 px-4 md:px-6 lg:px-12">
         <ResponsiveContainer width="100%" height={300}>
-          {/* Adding a unique key to force re-render when diceNumber changes */}
-          <ComposedChart key={diceNumber} data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
+          <ComposedChart width={500} height={300} data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" strokeWidth={3} />
             <XAxis dataKey="name" domain={[2, 12]} stroke="#333" fontSize={20} strokeWidth={3} />
             <YAxis domain={[0, 10]} stroke="#333" fontSize={20} strokeWidth={3} />
             <Tooltip />
             <Legend />
-
-            {/* Stacked Bars for players' dice rolls */}
             {players.map(player => {
               const userId = player.playerId?.toString();
               return (
                 userId && (
-                  <Bar
-                    key={`user${userId}`}
-                    dataKey={`user${userId}`}
-                    stackId="a"
-                    name={player.username} // Display player's name
-                    fill={player.playerColor} // Use player's assigned color
-                  />
+                  <Bar key={`user${userId}`} dataKey={`user${userId}`} stackId="a" name={player.username} fill={player.playerColor} />
                 )
               );
             })}
-
-            {/* Line Chart for overall dice distribution */}
             <Line type="monotone" dataKey="distribution" stroke="#ff7300" strokeWidth={3} />
           </ComposedChart>
         </ResponsiveContainer>

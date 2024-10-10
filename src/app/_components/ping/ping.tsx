@@ -22,7 +22,7 @@ const Ping = ({ showTriggerButton = false, showBackground = true }: PingProps) =
 
   useEffect(() => {
     handlePing();
-    setInterval(handlePing, 20000);
+    // setInterval(handlePing, 20000);
   }, []);
 
   return (
