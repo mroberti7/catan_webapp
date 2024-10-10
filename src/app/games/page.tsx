@@ -7,7 +7,9 @@ import { getSingleGameURL } from '@/app/utils/game';
 import { GameDTO, GameInfoDTO } from '@/lib/generated';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { formatDate } from '@/app/utils/date';
+import { DEFAULT_LOCALE, formatDate } from '@/app/utils/date';
+import { EyeIcon } from '@heroicons/react/24/outline';
+import { Scenario } from '@/enum';
 
 const GamesPage = () => {
   const router = useRouter();
@@ -26,14 +28,78 @@ const GamesPage = () => {
 
   return (
     <ComposedLayout>
-      <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+      <div className="my-20 flex h-auto min-h-screen w-full flex-col items-center justify-center gap-4 p-2">
         {isLoading && <Loader />}
         {!isLoading &&
           games.map(game => (
-            <div key={game.id} className="flex items-center justify-center gap-6 rounded-md border-2 border-secondary p-3">
-              <h1>ID: {game.id}</h1>
-              <h1>Start: {formatDate(game.startTimestamp ?? '')}</h1>
-              <Button onClick={() => router.push(getSingleGameURL(game.id))}>View Game</Button>
+            <div
+              key={game.id}
+              className={`flex w-full items-center justify-between rounded-lg border-2 border-primary bg-cover bg-bottom bg-no-repeat md:w-auto md:min-w-96`}
+              style={{
+                backgroundImage: `url('/assets/wallpapers/wallpaper-${game?.gameType === Scenario.Seafarers ? 'seafarers' : 'empty'}.png')`,
+              }}
+            >
+              <div className="flex h-full w-full items-center justify-center gap-1 bg-slate-500 bg-opacity-60 p-2 md:gap-3">
+                <div className="flex w-full flex-col items-center justify-center gap-2">
+                  <h1 className="flex w-full items-center justify-center text-lg font-semibold text-catan-red">{game.gameName}</h1>
+                  <div className="flex w-full flex-col items-center justify-start gap-1">
+                    <div className="flex w-full items-center justify-between gap-2">
+                      <span className="flex w-full items-center justify-start gap-2">
+                        <span className="mr-1">Turns:</span>
+                        <span>{game.turnNumber}</span>
+                      </span>
+                      <span className="flex w-full items-center justify-start gap-2">
+                        <span className="mr-1">Victory Points:</span>
+                        <span>{game.requiredVictoryPoints}</span>
+                      </span>
+                    </div>
+                    <span className="flex w-full items-center justify-start gap-2">
+                      <span className="mr-1">Start:</span>
+                      <span>
+                        {formatDate(game.startTimestamp ?? '', DEFAULT_LOCALE, {
+                          weekday: 'short',
+                          month: 'short',
+                          day: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </span>
+                    </span>
+                    <span className="flex w-full items-center justify-start gap-1">
+                      {game.endTimestamp ? (
+                        <>
+                          <span className="mr-1">Start:</span>
+                          <span>
+                            {formatDate(game.startTimestamp ?? '', DEFAULT_LOCALE, {
+                              weekday: 'short',
+                              month: 'short',
+                              day: '2-digit',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
+                          </span>
+                        </>
+                      ) : (
+                        <span>Match in progress</span>
+                      )}
+                    </span>
+                    {/* <span className="flex w-full items-center justify-start gap-1">
+                    {game.endTimestamp ? (
+                      <>
+                        <span className="mr-1">Winner:</span>
+                        <span>{game.winner}</span>
+                      </>
+                    ) : (
+                      ''
+                    )}
+                  </span> */}
+                  </div>
+                </div>
+
+                <Button onClick={() => router.push(getSingleGameURL(game.id))}>
+                  <EyeIcon className="size-6" />
+                </Button>
+              </div>
             </div>
           ))}
       </div>

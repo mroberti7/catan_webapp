@@ -14,7 +14,7 @@ import { Scenario } from '@/enum';
 const Game = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [game, setGame] = useState<GameDTO | null>(null); //TODO: CHANGE type
+  const [game, setGame] = useState<GameDTO | null>(null);
   const [isLoading, setLoading] = useState(true);
   const gameId = parseInt(searchParams.get('id') ?? '', 10);
   if (isNaN(gameId)) {
