@@ -11,6 +11,7 @@ type GameActionsProps = {
   deletePreviousTurn: (gameId: number) => void;
   clearCurrentTurnData: () => void;
   endGame: (gameId: number) => void;
+  diceNumber: null | number;
 };
 
 type PlayerActions = {
@@ -23,7 +24,7 @@ type PlayerActions = {
   largestArmy: boolean;
 };
 
-const GameActions = ({ gameId, playerId, endTurn, deletePreviousTurn, endGame, clearCurrentTurnData }: GameActionsProps) => {
+const GameActions = ({ gameId, playerId, endTurn, deletePreviousTurn, endGame, clearCurrentTurnData, diceNumber }: GameActionsProps) => {
   const initialPlayerActions: PlayerActions = {
     roadsBuilt: 0,
     coloniesBuilt: 0,
@@ -37,6 +38,10 @@ const GameActions = ({ gameId, playerId, endTurn, deletePreviousTurn, endGame, c
   const [playerActions, setPlayerActions] = useState<PlayerActions>(initialPlayerActions);
 
   const endTurnFromActions = () => {
+    if (!diceNumber) {
+      alert('Devi selezionare il dado');
+      return;
+    }
     const turn: TurnDTO = {
       gameId,
       playerId,

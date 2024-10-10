@@ -28,11 +28,7 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
   };
 
   const endTurn = async (turn: TurnDTO) => {
-    if (!diceNumber) {
-      alert('Devi selezionare il dado');
-      return;
-    }
-    turn.outcome = diceNumber;
+    turn.outcome = diceNumber ?? 0;
     const response = await saveTurn(game.gameInfo.id ?? 0, turn);
     if (response) {
       console.log('Turn saved correctly');
@@ -86,6 +82,7 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
             deletePreviousTurn={deletePreviousTurn}
             endGame={endGame}
             clearCurrentTurnData={clearCurrentTurnData}
+            diceNumber={diceNumber}
           />
         )}
       </div>
