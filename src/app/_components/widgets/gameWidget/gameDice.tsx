@@ -1,4 +1,5 @@
 import Loader from '@/app/_components/loader/loader';
+import NumberIcon from '@/app/_components/numberIcon/numberIcon';
 import { getGameDiceStats } from '@/app/utils/api';
 import { GamePlayerDTO, PlayerStatisticsDTO } from '@/lib/generated';
 import { Dispatch, SetStateAction, useEffect, useState, useMemo } from 'react';
@@ -74,16 +75,17 @@ const GameDice = ({ gameId, diceNumber, setDiceNumber, players, refreshDiceStats
 
   return (
     <div className="flex flex-col items-center justify-center gap-10">
-      <div className="flex flex-wrap items-center justify-center gap-3 lg:gap-5">
+      <div className="flex flex-wrap items-center justify-center gap-2 lg:gap-5">
         {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(number => (
           <button
             key={number}
             onClick={() => setDiceNumber(number)}
-            className={`flex size-8 items-center justify-center rounded-full border-2 md:size-14 ${
-              diceNumber === number ? 'border-catan-red bg-primary text-catan-red' : 'border-primary bg-catan-red text-primary'
-            } text-md p-2 font-bold md:text-lg`}
+            // className={`flex size-8 items-center justify-center rounded-full border-2 md:size-14 ${
+            //   diceNumber === number ? 'border-catan-red bg-primary text-catan-red' : 'border-primary bg-catan-red text-primary'
+            // } text-md p-2 font-bold md:text-lg`}
           >
-            {number}
+            {/* {number} */}
+            <NumberIcon number={number} selected={diceNumber === number} size={'size-10 md:size-16'} />
           </button>
         ))}
       </div>
