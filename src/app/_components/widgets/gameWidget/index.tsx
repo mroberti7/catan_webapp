@@ -54,17 +54,7 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
     setDiceNumber(null);
   };
 
-  const endGame = async (winnerPlayerId: number, victoryPointsDrawn: number) => {
-    const playerData: GamePlayerDTO[] = game?.gamePlayers.map(player => {
-      if (player.playerId === winnerPlayerId) {
-        return {
-          ...player,
-          victoryPointsDrawn: victoryPointsDrawn,
-          winner: true,
-        };
-      }
-      return player;
-    });
+  const endGame = async (winnerPlayerId: number, playerData: GamePlayerDTO[]) => {
     const response = await endCurrentGame(game.gameInfo.id ?? -1, playerData);
     if (response) {
       successToast('Game ended');
@@ -94,6 +84,7 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
           <GameActions
             gameId={game.gameInfo.id}
             player={currentPlayerToPlay}
+            allPlayers={game.gamePlayers}
             endTurn={endTurn}
             deletePreviousTurn={deletePreviousTurn}
             endGame={endGame}

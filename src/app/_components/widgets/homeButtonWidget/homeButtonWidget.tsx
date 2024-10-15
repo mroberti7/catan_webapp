@@ -30,7 +30,7 @@ const HomeButtonWidget = () => {
           >
             <div className="flex items-center justify-center gap-1 font-semibold md:gap-2">
               <ArrowPathIcon className="size-6 md:size-8" />
-              <span className="text-sm md:text-xl">Last Game</span>
+              <span className="text-sm md:text-xl">Last Games</span>
             </div>
           </Button>
         </div>

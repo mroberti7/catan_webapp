@@ -11,10 +11,11 @@ import { PlusCircleIcon } from '@heroicons/react/24/outline';
 type GameActionsProps = {
   gameId: number;
   player: GamePlayerDTO;
+  allPlayers: GamePlayerDTO[];
   endTurn: (turn: TurnDTO) => void;
   deletePreviousTurn: (gameId: number) => void;
   clearCurrentTurnData: () => void;
-  endGame: (winnerPlayerId: number, victoryPointsDrawn: number) => Promise<void>;
+  endGame: (winnerPlayerId: number, allPlayers: GamePlayerDTO[]) => Promise<void>;
   diceNumber: null | number;
 };
 
@@ -28,7 +29,16 @@ type PlayerActions = {
   largestArmy: boolean;
 };
 
-const GameActions = ({ gameId, player, endTurn, deletePreviousTurn, endGame, clearCurrentTurnData, diceNumber }: GameActionsProps) => {
+const GameActions = ({
+  gameId,
+  player,
+  allPlayers,
+  endTurn,
+  deletePreviousTurn,
+  endGame,
+  clearCurrentTurnData,
+  diceNumber,
+}: GameActionsProps) => {
   const initialPlayerActions: PlayerActions = {
     roadsBuilt: 0,
     coloniesBuilt: 0,
@@ -42,8 +52,8 @@ const GameActions = ({ gameId, player, endTurn, deletePreviousTurn, endGame, cle
   const [playerActions, setPlayerActions] = useState<PlayerActions>(initialPlayerActions);
   const [showDeletePreviousTurnModal, setShowDeletePreviousTurnModal] = useState(false);
   const [showEndGameModal, setShowEndGameModal] = useState(false);
-  const [winnerVictoryPointsDrawn, setWinnerVictoryPointsDrawn] = useState(0);
   const [showModalDiceNotSelected, setShowModalDiceNotSelected] = useState(false);
+  const [playersVictoryPointsDrawn, setPlayersVictoryPointsDrawn] = useState<GamePlayerDTO[]>(allPlayers);
 
   const endTurnFromActions = () => {
     if (!diceNumber) {
@@ -71,12 +81,32 @@ const GameActions = ({ gameId, player, endTurn, deletePreviousTurn, endGame, cle
   };
 
   const endGameFromActions = () => {
-    endGame(player?.playerId ?? 0, winnerVictoryPointsDrawn);
+    endGame(player?.playerId ?? 0, playersVictoryPointsDrawn);
     clearCurrentTurnDataFromActions();
   };
   const clearCurrentTurnDataFromActions = () => {
     setPlayerActions(initialPlayerActions);
     clearCurrentTurnData();
+  };
+
+  const closeEndGameModal = () => {
+    setShowEndGameModal(false);
+    setPlayersVictoryPointsDrawn(allPlayers);
+    clearCurrentTurnDataFromActions();
+  };
+
+  const updatePlayerVictoryPointsDrawn = (playerId?: number, victoryPointsDrawn?: number) => {
+    setPlayersVictoryPointsDrawn(
+      playersVictoryPointsDrawn.map(player => (player.playerId === playerId ? { ...player, victoryPointsDrawn } : player)),
+    );
+  };
+
+  const updatePlayerWinner = (playerId?: number) => {
+    setPlayersVictoryPointsDrawn(
+      playersVictoryPointsDrawn.map(player =>
+        player.playerId === playerId ? { ...player, winner: !player.winner } : { ...player, winner: false },
+      ),
+    );
   };
 
   //TODO: move modals to a separated components
@@ -103,25 +133,62 @@ const GameActions = ({ gameId, player, endTurn, deletePreviousTurn, endGame, cle
           </div>
         </div>
       </Modal>
-      <Modal id="end-game-modal" isModalOpen={showEndGameModal} onClose={() => setShowEndGameModal(false)}>
+      <Modal id="end-game-modal" isModalOpen={showEndGameModal} onClose={closeEndGameModal}>
         <div className="flex flex-col items-center justify-center gap-5 p-10">
           <p className="text-xl font-bold">End Game</p>
           <div className="flex w-full flex-col items-center justify-center gap-6">
-            <div className="flex items-center justify-center gap-2 text-xl font-bold text-catan-red">
-              Winner: {player.username}
-              <TrophyIcon className="size-6" />
-            </div>
-            <div className="flex items-center justify-center gap-2">
-              <span className="mr-6">Victory Points Drawn</span>
-              <button onClick={() => setWinnerVictoryPointsDrawn(winnerVictoryPointsDrawn - 1)}>
-                <MinusCircleIcon className="size-8" />
-              </button>
-              <div className="h-[2rem] w-[6rem] rounded-md border-2 border-black bg-catan-red bg-opacity-45 p-1 text-center">
-                {winnerVictoryPointsDrawn}
-              </div>
-              <button onClick={() => setWinnerVictoryPointsDrawn(winnerVictoryPointsDrawn + 1)}>
-                <PlusCircleIcon className="size-8" />
-              </button>
+            <div className="flex items-end justify-center gap-2 text-xl font-bold text-catan-red">Victory Points Drawn</div>
+
+            <div className="flex flex-col items-center justify-between gap-2">
+              {playersVictoryPointsDrawn.map(playerVictoryPointsDrawn => (
+                <div key={playerVictoryPointsDrawn.playerId} className="flex min-w-32 items-center justify-center gap-2">
+                  <button
+                    onClick={() => updatePlayerWinner(playerVictoryPointsDrawn.playerId)}
+                    className="h-[3rem] w-[5rem] rounded-md border-2 border-black bg-opacity-45 p-1 text-center"
+                    style={{ backgroundColor: playerVictoryPointsDrawn.playerColor }}
+                  >
+                    {playerVictoryPointsDrawn.username}
+                  </button>
+                  <button
+                    onClick={() =>
+                      updatePlayerVictoryPointsDrawn(
+                        playerVictoryPointsDrawn.playerId,
+                        (playerVictoryPointsDrawn.victoryPointsDrawn ?? 0) - 1,
+                      )
+                    }
+                  >
+                    <MinusCircleIcon className="size-8" />
+                  </button>
+                  <div
+                    className={`h-[2rem] w-[6rem] rounded-md border-2 border-black bg-opacity-45 p-1 text-center`}
+                    style={{ backgroundColor: playerVictoryPointsDrawn.playerColor }}
+                  >
+                    {playerVictoryPointsDrawn.victoryPointsDrawn}
+                  </div>
+                  <button
+                    onClick={() =>
+                      updatePlayerVictoryPointsDrawn(
+                        playerVictoryPointsDrawn.playerId,
+                        (playerVictoryPointsDrawn.victoryPointsDrawn ?? 0) + 1,
+                      )
+                    }
+                  >
+                    <PlusCircleIcon className="size-8" />
+                  </button>
+                  <div className="min-w-16">
+                    {playerVictoryPointsDrawn.winner ? (
+                      <span className="ml-4 text-4xl">👑</span>
+                    ) : (
+                      <button
+                        onClick={() => updatePlayerWinner(playerVictoryPointsDrawn.playerId)}
+                        className="min-w-16 rounded-lg border-2 border-gray-400 p-1 text-gray-400"
+                      >
+                        Set
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -134,7 +201,7 @@ const GameActions = ({ gameId, player, endTurn, deletePreviousTurn, endGame, cle
             >
               End Game
             </Button>
-            <Button onClick={() => setShowEndGameModal(false)}>Cancel</Button>
+            <Button onClick={closeEndGameModal}>Cancel</Button>
           </div>
         </div>
       </Modal>
