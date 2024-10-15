@@ -1,9 +1,9 @@
-import { GameDTO, TurnDTO } from '@/lib/generated';
+import { GameDTO, GamePlayerDTO, TurnDTO } from '@/lib/generated';
 import GamePlayers from '@/app/_components/widgets/gameWidget/gamePlayers';
 import { useEffect, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import GameActions from '@/app/_components/widgets/gameWidget/gameActions';
-import { deleteLastTurn, getGameById, saveTurn } from '@/app/utils/api';
+import { deleteLastTurn, endCurrentGame, getGameById, saveTurn } from '@/app/utils/api';
 import GameDice from '@/app/_components/widgets/gameWidget/gameDice';
 
 type GameWidgetProps = {
@@ -13,7 +13,7 @@ type GameWidgetProps = {
 const GameWidget = ({ initialGame }: GameWidgetProps) => {
   const [game, setGame] = useState<GameDTO>(initialGame);
   const [showPlayers, setShowPlayers] = useState(true);
-  const [currentPlayerIdToPlay, setCurrentPlayerIdToPlay] = useState(game?.gamePlayers?.[0]?.playerId ?? 0);
+  const [currentPlayerToPlay, setCurrentPlayerToPlay] = useState(game?.gamePlayers?.[0] ?? 0);
   const [diceNumber, setDiceNumber] = useState<null | number>(null);
   const [refreshDiceStats, setRefreshDiceStats] = useState(false);
 
@@ -55,13 +55,30 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
     setDiceNumber(null);
   };
 
-  const endGame = async () => {
-    alert('end game');
+  const endGame = async (winnerPlayerId: number, victoryPointsDrawn: number) => {
+    const playerData: GamePlayerDTO[] = game?.gamePlayers.map(player => {
+      if (player.playerId === winnerPlayerId) {
+        return {
+          ...player,
+          victoryPointsDrawn: victoryPointsDrawn,
+          winner: true,
+        };
+      }
+      return player;
+    });
+    const response = await endCurrentGame(game.gameInfo.id ?? -1, playerData);
+    if (response) {
+      console.log('Game ended correctly');
+      await refreshGame();
+      setDiceNumber(null);
+    } else {
+      console.error('Error ending game');
+    }
   };
 
   useEffect(() => {
     const currentPlayerToPlayIndex = (game?.gameInfo?.turnNumber ?? 0 - 1) % game?.gamePlayers.length;
-    setCurrentPlayerIdToPlay(game?.gamePlayers[currentPlayerToPlayIndex]?.playerId ?? 0);
+    setCurrentPlayerToPlay(game?.gamePlayers[currentPlayerToPlayIndex] ?? 0);
   }, [game?.gameInfo?.turnNumber]);
 
   return (
@@ -71,13 +88,13 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
         players={game.gamePlayers}
         showPlayers={showPlayers}
         setShowPlayers={setShowPlayers}
-        currentPlayerIdToPlay={currentPlayerIdToPlay}
+        currentPlayerToPlay={currentPlayerToPlay}
       />
       <div id="game-actions" className="flex h-auto w-full items-start justify-between">
         {game?.gameInfo?.id && (
           <GameActions
             gameId={game.gameInfo.id}
-            playerId={currentPlayerIdToPlay}
+            player={currentPlayerToPlay}
             endTurn={endTurn}
             deletePreviousTurn={deletePreviousTurn}
             endGame={endGame}

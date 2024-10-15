@@ -18,10 +18,10 @@ type GamePlayersProps = {
   players: GamePlayerDTO[];
   showPlayers: boolean;
   setShowPlayers: Dispatch<SetStateAction<boolean>>;
-  currentPlayerIdToPlay: number;
+  currentPlayerToPlay: GamePlayerDTO;
 };
 
-const GamePlayers = ({ gameInfo, players, showPlayers, setShowPlayers, currentPlayerIdToPlay }: GamePlayersProps) => {
+const GamePlayers = ({ gameInfo, players, showPlayers, setShowPlayers, currentPlayerToPlay }: GamePlayersProps) => {
   return (
     <>
       <div
@@ -49,14 +49,14 @@ const GamePlayers = ({ gameInfo, players, showPlayers, setShowPlayers, currentPl
                         src={player.avatarUrl}
                         alt={player.username ?? 'userAvatar'}
                         fill
-                        className={`opacity-b-80 rounded-lg border-4 ${player.playerId === currentPlayerIdToPlay ? 'animate-blink border-transparent' : 'border-yellow-600'}`}
+                        className={`opacity-b-80 rounded-lg border-4 ${player.playerId === currentPlayerToPlay?.playerId ? 'animate-blink border-transparent' : 'border-yellow-600'}`}
                         style={{ backgroundColor: player.playerColor }}
                       />
                     </div>
                   )}
                   <div className="-ml-1 w-full">
                     <div
-                      className={`mt-1 flex w-full items-center justify-between rounded-e-md border-y-2 border-r-2 ${player.playerId === currentPlayerIdToPlay ? 'animate-blink border-transparent' : 'border-yellow-600'} px-2`}
+                      className={`mt-1 flex w-full items-center justify-between rounded-e-md border-y-2 border-r-2 ${player.playerId === currentPlayerToPlay?.playerId ? 'animate-blink border-transparent' : 'border-yellow-600'} px-2`}
                       style={{ backgroundColor: player.playerColor }}
                     >
                       <h1 className="text-md col-span-3 ml-2 text-wrap font-bold">{player.username}</h1>
@@ -127,14 +127,14 @@ const GamePlayers = ({ gameInfo, players, showPlayers, setShowPlayers, currentPl
                       src={player.avatarUrl}
                       alt={player.username ?? 'userAvatar'}
                       fill
-                      className={`opacity-b-80 rounded-lg border-2 ${player.playerId === currentPlayerIdToPlay ? 'animate-blink border-transparent' : 'border-yellow-600'}`}
+                      className={`opacity-b-80 rounded-lg border-2 ${player.playerId === currentPlayerToPlay?.playerId ? 'animate-blink border-transparent' : 'border-yellow-600'}`}
                       style={{ backgroundColor: player.playerColor }}
                     />
                   </div>
                 )}
                 <div
                   key={player.playerId}
-                  className={`-ml-2 mt-1 flex w-full min-w-32 items-center justify-between rounded-md border-2 border-y-2 px-2 ${player.playerId === currentPlayerIdToPlay ? 'animate-blink border-transparent' : 'border-yellow-600'}`}
+                  className={`-ml-2 mt-1 flex w-full min-w-32 items-center justify-between rounded-md border-2 border-y-2 px-2 ${player.playerId === currentPlayerToPlay?.playerId ? 'animate-blink border-transparent' : 'border-yellow-600'}`}
                   style={{ backgroundColor: player.playerColor }}
                 >
                   <h1 className="text-md col-span-3 text-wrap font-bold">{player.username}</h1>

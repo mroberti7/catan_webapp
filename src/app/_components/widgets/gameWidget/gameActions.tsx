@@ -1,17 +1,20 @@
 import { useState } from 'react';
 import Button from '@/app/_components/button/button';
-import { TurnDTO } from '@/lib/generated';
+import { GamePlayerDTO, TurnDTO } from '@/lib/generated';
 import Image from 'next/image';
 import { deleteLastTurn } from '@/app/utils/api';
 import NumberIcon from '@/app/_components/numberIcon/numberIcon';
+import Modal from '@/app/_components/modal/modal';
+import { MinusCircleIcon, TrophyIcon } from '@heroicons/react/24/outline';
+import { PlusCircleIcon } from '@heroicons/react/24/outline';
 
 type GameActionsProps = {
   gameId: number;
-  playerId: number;
+  player: GamePlayerDTO;
   endTurn: (turn: TurnDTO) => void;
   deletePreviousTurn: (gameId: number) => void;
   clearCurrentTurnData: () => void;
-  endGame: (gameId: number) => void;
+  endGame: (winnerPlayerId: number, victoryPointsDrawn: number) => Promise<void>;
   diceNumber: null | number;
 };
 
@@ -25,7 +28,7 @@ type PlayerActions = {
   largestArmy: boolean;
 };
 
-const GameActions = ({ gameId, playerId, endTurn, deletePreviousTurn, endGame, clearCurrentTurnData, diceNumber }: GameActionsProps) => {
+const GameActions = ({ gameId, player, endTurn, deletePreviousTurn, endGame, clearCurrentTurnData, diceNumber }: GameActionsProps) => {
   const initialPlayerActions: PlayerActions = {
     roadsBuilt: 0,
     coloniesBuilt: 0,
@@ -37,6 +40,9 @@ const GameActions = ({ gameId, playerId, endTurn, deletePreviousTurn, endGame, c
   };
 
   const [playerActions, setPlayerActions] = useState<PlayerActions>(initialPlayerActions);
+  const [showDeletePreviousTurnModal, setShowDeletePreviousTurnModal] = useState(false);
+  const [showEndGameModal, setShowEndGameModal] = useState(false);
+  const [winnerVictoryPointsDrawn, setWinnerVictoryPointsDrawn] = useState(0);
 
   const endTurnFromActions = () => {
     if (!diceNumber) {
@@ -45,7 +51,7 @@ const GameActions = ({ gameId, playerId, endTurn, deletePreviousTurn, endGame, c
     }
     const turn: TurnDTO = {
       gameId,
-      playerId,
+      playerId: player.playerId,
       roadsBuilt: playerActions.roadsBuilt,
       coloniesBuilt: playerActions.coloniesBuilt,
       citiesBuilt: playerActions.citiesBuilt,
@@ -64,7 +70,7 @@ const GameActions = ({ gameId, playerId, endTurn, deletePreviousTurn, endGame, c
   };
 
   const endGameFromActions = () => {
-    endGame(gameId);
+    endGame(player?.playerId ?? 0, winnerVictoryPointsDrawn);
     clearCurrentTurnDataFromActions();
   };
   const clearCurrentTurnDataFromActions = () => {
@@ -72,8 +78,65 @@ const GameActions = ({ gameId, playerId, endTurn, deletePreviousTurn, endGame, c
     clearCurrentTurnData();
   };
 
+  //TODO: move modals to a separated components
+
   return (
     <div className="flex h-auto min-h-40 w-full flex-col items-center justify-center gap-5 p-8">
+      <Modal
+        id="delete-previous-turn-modal"
+        isModalOpen={showDeletePreviousTurnModal}
+        onClose={() => setShowDeletePreviousTurnModal(false)}
+      >
+        <div className="flex flex-col items-center justify-center gap-5 p-10">
+          <p className="text-lg font-bold">Sei sicuro di voler eliminare il turno precedente?</p>
+          <div className="flex gap-5">
+            <Button
+              onClick={() => {
+                deletePreviousTurnFromActions();
+                setShowDeletePreviousTurnModal(false);
+              }}
+            >
+              Si
+            </Button>
+            <Button onClick={() => setShowDeletePreviousTurnModal(false)}>No</Button>
+          </div>
+        </div>
+      </Modal>
+      <Modal id="end-game-modal" isModalOpen={showEndGameModal} onClose={() => setShowEndGameModal(false)}>
+        <div className="flex flex-col items-center justify-center gap-5 p-10">
+          <p className="text-xl font-bold">Concludi partita</p>
+          <div className="flex w-full flex-col items-center justify-center gap-6">
+            <div className="flex items-center justify-center gap-2 text-xl font-bold text-catan-red">
+              Winner: {player.username}
+              <TrophyIcon className="size-6" />
+            </div>
+            <div className="flex items-center justify-center gap-2">
+              <span className="mr-6">Victory Points Drawn</span>
+              <button onClick={() => setWinnerVictoryPointsDrawn(winnerVictoryPointsDrawn - 1)}>
+                <MinusCircleIcon className="size-8" />
+              </button>
+              <div className="h-[2rem] w-[6rem] rounded-md border-2 border-black bg-catan-red bg-opacity-45 p-1 text-center">
+                {winnerVictoryPointsDrawn}
+              </div>
+              <button onClick={() => setWinnerVictoryPointsDrawn(winnerVictoryPointsDrawn + 1)}>
+                <PlusCircleIcon className="size-8" />
+              </button>
+            </div>
+          </div>
+
+          <div className="flex gap-5">
+            <Button
+              onClick={() => {
+                endGameFromActions();
+                setShowDeletePreviousTurnModal(false);
+              }}
+            >
+              Concludi
+            </Button>
+            <Button onClick={() => setShowEndGameModal(false)}>Annulla</Button>
+          </div>
+        </div>
+      </Modal>
       <div className="grid grid-cols-3 place-items-center justify-items-center gap-2 md:grid-cols-7 md:gap-8">
         <Button
           className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-primary bg-catan-red p-1 pt-2 text-primary hover:bg-opacity-90"
@@ -150,10 +213,13 @@ const GameActions = ({ gameId, playerId, endTurn, deletePreviousTurn, endGame, c
         {/* <Button onClick={clearCurrentTurnDataFromActions} className="rounded-xl bg-primary p-3 text-catan-red hover:bg-opacity-80 md:p-4">
           <span className="text-wrap text-sm md:text-lg">Annulla turno corrente</span>
         </Button> */}
-        <button onClick={deletePreviousTurnFromActions} className="relative flex size-32 items-center justify-center">
+        <button
+          onClick={() => setShowDeletePreviousTurnModal(!showDeletePreviousTurnModal)}
+          className="relative flex size-32 items-center justify-center"
+        >
           <Image src={'/assets/icons/action-delete-previous-turn.png'} alt="road" fill className="rounded-md" />
         </button>
-        <button onClick={endGameFromActions} className="relative flex size-32 items-center justify-center">
+        <button onClick={() => setShowEndGameModal(!showEndGameModal)} className="relative flex size-32 items-center justify-center">
           <Image src={'/assets/icons/action-end-game.png'} alt="road" fill className="rounded-md" />
         </button>
       </div>

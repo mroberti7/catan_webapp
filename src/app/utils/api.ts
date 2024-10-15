@@ -9,6 +9,7 @@ import {
   TurnDTO,
   StatisticsControllerApi,
   PlayerStatisticsDTO,
+  GamePlayerDTO,
 } from '@/lib/generated';
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -47,10 +48,9 @@ export const createGame = async (gameData: GameSetupDTO): Promise<number> => {
   }
 };
 
-export const endGame = async (gameId: number): Promise<boolean | null> => {
-  //TODO:
+export const endCurrentGame = async (gameId: number, playersData: GamePlayerDTO[]): Promise<boolean | null> => {
   try {
-    const response = await gameApi.endGame(gameId, []);
+    const response = await gameApi.endGame(gameId, playersData);
     return response?.status === 201;
   } catch (error) {
     console.error('Error ending game:', error);

@@ -1,10 +1,10 @@
 export enum PlayerColor {
-  Red = '#E62525',
-  Blue = '#141E63',
-  Orange = '#FFA500',
-  White = '#C9D1D1',
-  Petrol = '#1B7574',
-  Brown = '#382212',
+  Red = '#FF6666',
+  Blue = '#3A4BFF',
+  Orange = '#FFCA54',
+  White = '#E1F1F1',
+  Petrol = '#2CC4C3',
+  Brown = '#855937',
 }
 
 export enum Scenario {
