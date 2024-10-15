@@ -2,6 +2,7 @@
 import ComposedLayout from '@/app/_components/layouts';
 import HomeButtonWidget from '@/app/_components/widgets/homeButtonWidget/homeButtonWidget';
 import HomeStatisticsWidget from '@/app/_components/widgets/homeStatisticsWidget/homeStatisticsWidget';
+import { Toaster } from 'react-hot-toast';
 
 export default function Home() {
   return (

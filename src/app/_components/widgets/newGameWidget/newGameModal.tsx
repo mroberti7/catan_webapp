@@ -1,5 +1,5 @@
 import Modal from '@/app/_components/modal/modal';
-import { createGame, getPlayers } from '@/app/utils/api';
+import { createGame, errorToast, getPlayers, successToast } from '@/app/utils/api';
 import { GamePlayerInfoDTO, PlayerDTO } from '@/lib/generated';
 import { useState, useEffect } from 'react';
 import Button from '@/app/_components/button/button';
@@ -69,8 +69,10 @@ const NewGameModal = ({ isModalOpen, onClose }: NewGameModalProps) => {
         scenario,
       });
       const gameId = await createGame(gameData);
-      if (!gameId) {
-        setError('Errore nella creazione della partita, colpa di Giovanni');
+      if (gameId) {
+        successToast('Game created');
+      } else {
+        errorToast('Error creating game');
         return;
       }
       router.replace(getSingleGameURL(gameId));

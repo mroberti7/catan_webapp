@@ -11,6 +11,7 @@ import {
   PlayerStatisticsDTO,
   GamePlayerDTO,
 } from '@/lib/generated';
+import toast from 'react-hot-toast';
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const playerApi = new PlayerControllerApi(undefined, BASE_URL);
@@ -107,4 +108,22 @@ export const getGameDiceStats = async (gameId: number): Promise<PlayerStatistics
     console.error('Error fetching game dice stats:', error);
     return null;
   }
+};
+
+export const successToast = (message: string) => {
+  toast.success(message, {
+    style: {
+      background: 'green',
+      color: 'white',
+    },
+  });
+};
+
+export const errorToast = (message: string) => {
+  toast.error(message, {
+    style: {
+      background: 'red',
+      color: 'white',
+    },
+  });
 };

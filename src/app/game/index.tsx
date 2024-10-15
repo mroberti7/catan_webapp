@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { notFound } from 'next/navigation';
 import { ROUTES } from '@/routes';
-import { getGameById } from '@/app/utils/api';
+import { getGameById, errorToast, successToast } from '@/app/utils/api';
 import GameWidget from '@/app/_components/widgets/gameWidget';
 import ComposedLayout from '@/app/_components/layouts';
 import { useEffect, useState } from 'react';
@@ -26,7 +26,10 @@ const Game = () => {
       setLoading(true);
       const gameData = await getGameById(gameId);
       if (!gameData) {
+        errorToast('Game not found');
         notFound();
+      } else {
+        successToast('Game fetched');
       }
       setGame(gameData);
       setLoading(false);

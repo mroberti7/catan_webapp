@@ -3,7 +3,7 @@ import GamePlayers from '@/app/_components/widgets/gameWidget/gamePlayers';
 import { useEffect, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import GameActions from '@/app/_components/widgets/gameWidget/gameActions';
-import { deleteLastTurn, endCurrentGame, getGameById, saveTurn } from '@/app/utils/api';
+import { deleteLastTurn, endCurrentGame, errorToast, getGameById, saveTurn, successToast } from '@/app/utils/api';
 import GameDice from '@/app/_components/widgets/gameWidget/gameDice';
 
 type GameWidgetProps = {
@@ -22,8 +22,10 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
     if (gameUpdated) {
       setGame(gameUpdated);
       setRefreshDiceStats(true);
+      clearCurrentTurnData();
+      successToast('Game updated');
     } else {
-      console.error('Error retrieving game');
+      errorToast('Error retrieving game');
     }
   };
 
@@ -31,23 +33,20 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
     turn.outcome = diceNumber ?? 0;
     const response = await saveTurn(game.gameInfo.id ?? 0, turn);
     if (response) {
-      console.log('Turn saved correctly');
+      successToast('Turn saved');
       await refreshGame();
-      setDiceNumber(null);
-      console.log('Changed dice number to null');
     } else {
-      console.error('Error saving turn');
+      errorToast('Error saving turn');
     }
   };
 
   const deletePreviousTurn = async () => {
     const response = await deleteLastTurn(game.gameInfo.id ?? -1);
     if (response) {
-      console.log('Turn deleted correctly');
+      successToast('Turn deleted');
       await refreshGame();
-      setDiceNumber(null);
     } else {
-      console.error('Error deleting turn');
+      errorToast('Error deleting turn');
     }
   };
 
@@ -68,11 +67,11 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
     });
     const response = await endCurrentGame(game.gameInfo.id ?? -1, playerData);
     if (response) {
-      console.log('Game ended correctly');
+      successToast('Game ended');
       await refreshGame();
       setDiceNumber(null);
     } else {
-      console.error('Error ending game');
+      errorToast('Error ending game');
     }
   };
 

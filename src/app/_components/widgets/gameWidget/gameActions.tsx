@@ -43,10 +43,11 @@ const GameActions = ({ gameId, player, endTurn, deletePreviousTurn, endGame, cle
   const [showDeletePreviousTurnModal, setShowDeletePreviousTurnModal] = useState(false);
   const [showEndGameModal, setShowEndGameModal] = useState(false);
   const [winnerVictoryPointsDrawn, setWinnerVictoryPointsDrawn] = useState(0);
+  const [showModalDiceNotSelected, setShowModalDiceNotSelected] = useState(false);
 
   const endTurnFromActions = () => {
     if (!diceNumber) {
-      alert('Devi selezionare il dado');
+      setShowModalDiceNotSelected(true);
       return;
     }
     const turn: TurnDTO = {
@@ -88,7 +89,7 @@ const GameActions = ({ gameId, player, endTurn, deletePreviousTurn, endGame, cle
         onClose={() => setShowDeletePreviousTurnModal(false)}
       >
         <div className="flex flex-col items-center justify-center gap-5 p-10">
-          <p className="text-lg font-bold">Sei sicuro di voler eliminare il turno precedente?</p>
+          <p className="text-lg font-bold">Are you sure to delete the previous turn?</p>
           <div className="flex gap-5">
             <Button
               onClick={() => {
@@ -96,7 +97,7 @@ const GameActions = ({ gameId, player, endTurn, deletePreviousTurn, endGame, cle
                 setShowDeletePreviousTurnModal(false);
               }}
             >
-              Si
+              Yes
             </Button>
             <Button onClick={() => setShowDeletePreviousTurnModal(false)}>No</Button>
           </div>
@@ -104,7 +105,7 @@ const GameActions = ({ gameId, player, endTurn, deletePreviousTurn, endGame, cle
       </Modal>
       <Modal id="end-game-modal" isModalOpen={showEndGameModal} onClose={() => setShowEndGameModal(false)}>
         <div className="flex flex-col items-center justify-center gap-5 p-10">
-          <p className="text-xl font-bold">Concludi partita</p>
+          <p className="text-xl font-bold">End Game</p>
           <div className="flex w-full flex-col items-center justify-center gap-6">
             <div className="flex items-center justify-center gap-2 text-xl font-bold text-catan-red">
               Winner: {player.username}
@@ -131,10 +132,16 @@ const GameActions = ({ gameId, player, endTurn, deletePreviousTurn, endGame, cle
                 setShowDeletePreviousTurnModal(false);
               }}
             >
-              Concludi
+              End Game
             </Button>
-            <Button onClick={() => setShowEndGameModal(false)}>Annulla</Button>
+            <Button onClick={() => setShowEndGameModal(false)}>Cancel</Button>
           </div>
+        </div>
+      </Modal>
+      <Modal id="dice-not-selected-modal" isModalOpen={showModalDiceNotSelected} onClose={() => setShowModalDiceNotSelected(false)}>
+        <div className="flex flex-col items-center justify-center gap-5 p-10">
+          <div className="text-2xl font-bold">🐔 The DICE!!!!!!! 🐔 </div>
+          <div className="text-4xl font-bold">😩 😔 😵‍💫 😰 🥵 🤯</div>
         </div>
       </Modal>
       <div className="grid grid-cols-3 place-items-center justify-items-center gap-2 md:grid-cols-7 md:gap-8">

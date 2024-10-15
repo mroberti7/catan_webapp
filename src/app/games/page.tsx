@@ -2,7 +2,7 @@
 import Button from '@/app/_components/button/button';
 import ComposedLayout from '@/app/_components/layouts';
 import Loader from '@/app/_components/loader/loader';
-import { getAllGames } from '@/app/utils/api';
+import { getAllGames, successToast } from '@/app/utils/api';
 import { getSingleGameURL } from '@/app/utils/game';
 import { GameDTO, GameInfoDTO } from '@/lib/generated';
 import { useRouter } from 'next/navigation';
@@ -20,6 +20,9 @@ const GamesPage = () => {
     const fetchGames = async () => {
       setIsLoading(true);
       const games = await getAllGames();
+      if (!!games.length) {
+        successToast('Games fetched');
+      }
       setGames(games);
       setIsLoading(false);
     };
