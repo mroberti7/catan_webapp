@@ -52,7 +52,7 @@ const SideMenu = ({ isOpen, openMenu }: SideMenuProps) => {
 
       <div className="my-4 flex flex-col gap-8">
         <div className="mb-3 flex items-center justify-center gap-2">
-          <button onClick={() => router.push(ROUTES.HOME.pathname)}>
+          <button onClick={() => router.replace(ROUTES.HOME.pathname)}>
             <Image src="/assets/catan-logo.png" alt="logo" width={100} height={100} />
           </button>
         </div>
@@ -63,7 +63,7 @@ const SideMenu = ({ isOpen, openMenu }: SideMenuProps) => {
               <span className="text-lg font-medium text-gray-300 md:text-xl">{entry.label}</span>
             </div>
           ) : (
-            <button key={index} className="flex items-center justify-center gap-3" onClick={() => router.push(entry.path)}>
+            <button key={index} className="flex items-center justify-center gap-3" onClick={() => router.replace(entry.path)}>
               <entry.icon className="size-7 text-secondary md:size-8" />
               <span className="text-lg font-medium text-secondary md:text-xl">{entry.label}</span>
             </button>

@@ -73,7 +73,7 @@ const NewGameModal = ({ isModalOpen, onClose }: NewGameModalProps) => {
         setError('Errore nella creazione della partita, colpa di Giovanni');
         return;
       }
-      router.push(getSingleGameURL(gameId));
+      router.replace(getSingleGameURL(gameId));
     }
   };
 

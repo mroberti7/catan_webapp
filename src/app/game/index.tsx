@@ -18,7 +18,7 @@ const Game = () => {
   const [isLoading, setLoading] = useState(true);
   const gameId = parseInt(searchParams.get('id') ?? '', 10);
   if (isNaN(gameId)) {
-    router.push(ROUTES.GAMES.pathname);
+    router.replace(ROUTES.GAMES.pathname);
   }
 
   useEffect(() => {

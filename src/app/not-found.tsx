@@ -16,7 +16,7 @@ export default function Home() {
           <h1 className="text-4xl font-bold text-catan-red">404</h1>
           <h1 className="text-3xl font-bold text-catan-red">Page not found</h1>
         </div>
-        <Button onClick={() => router.push(ROUTES.HOME.pathname)}>
+        <Button onClick={() => router.replace(ROUTES.HOME.pathname)}>
           <div className="flex items-center gap-2">
             <HomeIcon className="size-9" />
             <span className="text-3xl">GO TO HOME</span>

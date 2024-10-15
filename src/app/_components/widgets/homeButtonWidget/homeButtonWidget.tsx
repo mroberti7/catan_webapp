@@ -25,7 +25,7 @@ const HomeButtonWidget = () => {
           </Button>
           <Button
             onClick={() => {
-              router.push(ROUTES.GAMES.pathname);
+              router.replace(ROUTES.GAMES.pathname);
             }}
           >
             <div className="flex items-center justify-center gap-1 font-semibold md:gap-2">

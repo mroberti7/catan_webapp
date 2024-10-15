@@ -28,7 +28,7 @@ const Header = ({ isOpen, openMenu }: HeaderProps) => {
 
       <div className="flex items-center gap-4">
         <Ping showBackground={false} />
-        <button onClick={() => router.push(ROUTES.HOME.pathname)}>
+        <button onClick={() => router.replace(ROUTES.HOME.pathname)}>
           <Image src="/assets/catan-logo.png" alt="logo" width={100} height={100} />
         </button>
       </div>

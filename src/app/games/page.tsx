@@ -96,7 +96,7 @@ const GamesPage = () => {
                   </div>
                 </div>
 
-                <Button onClick={() => router.push(getSingleGameURL(game.id))}>
+                <Button onClick={() => router.replace(getSingleGameURL(game.id))}>
                   <EyeIcon className="size-6" />
                 </Button>
               </div>
