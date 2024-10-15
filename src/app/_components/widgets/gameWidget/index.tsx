@@ -16,6 +16,7 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
   const [currentPlayerToPlay, setCurrentPlayerToPlay] = useState(game?.gamePlayers?.[0] ?? 0);
   const [diceNumber, setDiceNumber] = useState<null | number>(null);
   const [refreshDiceStats, setRefreshDiceStats] = useState(false);
+  const [minimalLayout, setMinimalLayout] = useState(false);
 
   const refreshGame = async () => {
     const gameUpdated = await getGameById(game.gameInfo.id ?? 0);
@@ -90,6 +91,7 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
             endGame={endGame}
             clearCurrentTurnData={clearCurrentTurnData}
             diceNumber={diceNumber}
+            minimalLayout={minimalLayout}
           />
         )}
       </div>
@@ -101,7 +103,16 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
           players={game.gamePlayers}
           refreshDiceStats={refreshDiceStats}
           setRefreshDiceStats={setRefreshDiceStats}
+          minimalLayout={minimalLayout}
         />
+      </div>
+      <div className="flex w-full items-center justify-center">
+        <button
+          onClick={() => setMinimalLayout(!minimalLayout)}
+          className={`rounded-lg px-4 py-2 text-white ${minimalLayout ? 'bg-catan-red' : 'bg-primary'}`}
+        >
+          {minimalLayout ? 'Minimal' : 'Medieval'}
+        </button>
       </div>
     </div>
   );

@@ -10,16 +10,16 @@ type GameDiceProps = {
   diceNumber: null | number;
   setDiceNumber: Dispatch<SetStateAction<null | number>>;
   players: GamePlayerDTO[];
-  refreshDiceStats: boolean; // New prop to trigger refresh
-  setRefreshDiceStats: Dispatch<SetStateAction<boolean>>; // New prop to reset the refresh trigger
+  refreshDiceStats: boolean;
+  setRefreshDiceStats: Dispatch<SetStateAction<boolean>>;
+  minimalLayout: boolean;
 };
 
-const GameDice = ({ gameId, diceNumber, setDiceNumber, players, refreshDiceStats, setRefreshDiceStats }: GameDiceProps) => {
+const GameDice = ({ gameId, diceNumber, setDiceNumber, players, refreshDiceStats, setRefreshDiceStats, minimalLayout }: GameDiceProps) => {
   const [diceStats, setDiceStats] = useState<PlayerStatisticsDTO[] | null>(null);
   const [isLoadingStats, setIsLoadingStats] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch the dice stats when the component mounts or refresh is triggered
   useEffect(() => {
     const fetchDiceStats = async () => {
       try {
@@ -29,14 +29,14 @@ const GameDice = ({ gameId, diceNumber, setDiceNumber, players, refreshDiceStats
         setError('Failed to fetch dice stats');
       } finally {
         setIsLoadingStats(false);
-        setRefreshDiceStats(false); // Reset the refresh trigger
+        setRefreshDiceStats(false);
       }
     };
 
     if (refreshDiceStats || !diceNumber) {
       fetchDiceStats();
     }
-  }, [diceNumber, gameId, refreshDiceStats]); // Trigger when diceNumber, gameId, or refresh trigger changes
+  }, [diceNumber, gameId, refreshDiceStats]);
 
   // Recalculate chart data when diceStats or diceNumber changes
   const chartData = useMemo(() => {
@@ -77,15 +77,8 @@ const GameDice = ({ gameId, diceNumber, setDiceNumber, players, refreshDiceStats
     <div className="flex flex-col items-center justify-center gap-10">
       <div className="flex flex-wrap items-center justify-center gap-2 lg:gap-5">
         {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(number => (
-          <button
-            key={number}
-            onClick={() => setDiceNumber(number)}
-            // className={`flex size-8 items-center justify-center rounded-full border-2 md:size-14 ${
-            //   diceNumber === number ? 'border-catan-red bg-primary text-catan-red' : 'border-primary bg-catan-red text-primary'
-            // } text-md p-2 font-bold md:text-lg`}
-          >
-            {/* {number} */}
-            <NumberIcon number={number} selected={diceNumber === number} size={'size-10 md:size-16'} />
+          <button key={number} onClick={() => setDiceNumber(number)}>
+            <NumberIcon number={number} selected={diceNumber === number} size={'size-12 md:size-16'} minimalLayout={minimalLayout} />
           </button>
         ))}
       </div>

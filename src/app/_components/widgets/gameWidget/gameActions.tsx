@@ -17,6 +17,7 @@ type GameActionsProps = {
   clearCurrentTurnData: () => void;
   endGame: (winnerPlayerId: number, allPlayers: GamePlayerDTO[]) => Promise<void>;
   diceNumber: null | number;
+  minimalLayout: boolean;
 };
 
 type PlayerActions = {
@@ -38,6 +39,7 @@ const GameActions = ({
   endGame,
   clearCurrentTurnData,
   diceNumber,
+  minimalLayout,
 }: GameActionsProps) => {
   const initialPlayerActions: PlayerActions = {
     roadsBuilt: 0,
@@ -216,7 +218,7 @@ const GameActions = ({
           className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-primary bg-catan-red p-1 pt-2 text-primary hover:bg-opacity-90"
           onClick={() => setPlayerActions(prev => ({ ...prev, roadsBuilt: prev.roadsBuilt + 1 }))}
         >
-          <NumberIcon number={playerActions.roadsBuilt} size="size-12 md:size-12" />
+          <NumberIcon number={playerActions.roadsBuilt} size="size-12" minimalLayout={minimalLayout} />
           <div className="relative flex size-20 items-center justify-center">
             <Image src={'/assets/icons/road.png'} alt="road" fill />
           </div>
@@ -225,7 +227,7 @@ const GameActions = ({
           className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-primary bg-catan-red p-1 pt-2 text-primary hover:bg-opacity-90"
           onClick={() => setPlayerActions(prev => ({ ...prev, coloniesBuilt: prev.coloniesBuilt + 1 }))}
         >
-          <NumberIcon number={playerActions.coloniesBuilt} size="size-12 md:size-12" />
+          <NumberIcon number={playerActions.coloniesBuilt} size="size-12" minimalLayout={minimalLayout} />
           <div className="relative flex size-20 items-center justify-center">
             <Image src={'/assets/icons/colony.png'} alt="road" fill />
           </div>
@@ -234,7 +236,7 @@ const GameActions = ({
           className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-primary bg-catan-red p-1 pt-2 text-primary hover:bg-opacity-90"
           onClick={() => setPlayerActions(prev => ({ ...prev, citiesBuilt: prev.citiesBuilt + 1 }))}
         >
-          <NumberIcon number={playerActions.citiesBuilt} size="size-12 md:size-12" />
+          <NumberIcon number={playerActions.citiesBuilt} size="size-12" minimalLayout={minimalLayout} />
           <div className="relative flex size-20 items-center justify-center">
             <Image src={'/assets/icons/city.png'} alt="road" fill />
           </div>
@@ -243,7 +245,7 @@ const GameActions = ({
           className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-primary bg-catan-red p-1 pt-2 text-primary hover:bg-opacity-90"
           onClick={() => setPlayerActions(prev => ({ ...prev, developCardDrawn: prev.developCardDrawn + 1 }))}
         >
-          <NumberIcon number={playerActions.developCardDrawn} size="size-12 md:size-12" />
+          <NumberIcon number={playerActions.developCardDrawn} size="size-12" minimalLayout={minimalLayout} />
           <div className="relative flex size-20 items-center justify-center">
             <Image src={'/assets/icons/card.png'} alt="road" fill />
           </div>
@@ -279,22 +281,43 @@ const GameActions = ({
       </div>
       <div className="flex gap-5">
         <button onClick={endTurnFromActions} className="relative flex size-32 items-center justify-center">
-          <Image src={'/assets/icons/action-end-turn.png'} alt="road" fill className="rounded-md" />
+          {minimalLayout ? (
+            <span className="flex size-[6rem] items-center justify-center rounded-full border-2 border-catan-red bg-primary text-5xl">
+              ⏩️
+            </span>
+          ) : (
+            <Image src={'/assets/icons/action-end-turn.png'} alt="road" fill className="rounded-md" />
+          )}
         </button>
         <button onClick={clearCurrentTurnDataFromActions} className="relative flex size-32 items-center justify-center">
-          <Image src={'/assets/icons/action-reset-selection.png'} alt="road" fill className="rounded-md" />
+          {minimalLayout ? (
+            <span className="flex size-[6rem] items-center justify-center rounded-full border-2 border-catan-red bg-primary text-5xl">
+              🔁
+            </span>
+          ) : (
+            <Image src={'/assets/icons/action-reset-selection.png'} alt="road" fill className="rounded-md" />
+          )}
         </button>
-        {/* <Button onClick={clearCurrentTurnDataFromActions} className="rounded-xl bg-primary p-3 text-catan-red hover:bg-opacity-80 md:p-4">
-          <span className="text-wrap text-sm md:text-lg">Annulla turno corrente</span>
-        </Button> */}
         <button
           onClick={() => setShowDeletePreviousTurnModal(!showDeletePreviousTurnModal)}
           className="relative flex size-32 items-center justify-center"
         >
-          <Image src={'/assets/icons/action-delete-previous-turn.png'} alt="road" fill className="rounded-md" />
+          {minimalLayout ? (
+            <span className="flex size-[6rem] items-center justify-center rounded-full border-2 border-catan-red bg-primary text-5xl">
+              ⏪️
+            </span>
+          ) : (
+            <Image src={'/assets/icons/action-delete-previous-turn.png'} alt="road" fill className="rounded-md" />
+          )}
         </button>
         <button onClick={() => setShowEndGameModal(!showEndGameModal)} className="relative flex size-32 items-center justify-center">
-          <Image src={'/assets/icons/action-end-game.png'} alt="road" fill className="rounded-md" />
+          {minimalLayout ? (
+            <span className="flex size-[6rem] items-center justify-center rounded-full border-2 border-catan-red bg-primary text-5xl">
+              🏁
+            </span>
+          ) : (
+            <Image src={'/assets/icons/action-end-game.png'} alt="road" fill className="rounded-md" />
+          )}
         </button>
       </div>
     </div>
