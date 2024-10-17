@@ -7,6 +7,7 @@ import { ResponsiveContainer, ComposedChart, CartesianGrid, XAxis, YAxis, Toolti
 
 type GameDiceProps = {
   gameId: number;
+  isGameEnded: boolean;
   diceNumber: null | number;
   setDiceNumber: Dispatch<SetStateAction<null | number>>;
   players: GamePlayerDTO[];
@@ -15,7 +16,16 @@ type GameDiceProps = {
   minimalLayout: boolean;
 };
 
-const GameDice = ({ gameId, diceNumber, setDiceNumber, players, refreshDiceStats, setRefreshDiceStats, minimalLayout }: GameDiceProps) => {
+const GameDice = ({
+  gameId,
+  isGameEnded,
+  diceNumber,
+  setDiceNumber,
+  players,
+  refreshDiceStats,
+  setRefreshDiceStats,
+  minimalLayout,
+}: GameDiceProps) => {
   const [diceStats, setDiceStats] = useState<PlayerStatisticsDTO[] | null>(null);
   const [isLoadingStats, setIsLoadingStats] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -75,13 +85,15 @@ const GameDice = ({ gameId, diceNumber, setDiceNumber, players, refreshDiceStats
 
   return (
     <div className="flex flex-col items-center justify-center gap-10">
-      <div className="flex flex-wrap items-center justify-center gap-2 lg:gap-5">
-        {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(number => (
-          <button key={number} onClick={() => setDiceNumber(number)}>
-            <NumberIcon number={number} selected={diceNumber === number} size={'size-12 md:size-16'} minimalLayout={minimalLayout} />
-          </button>
-        ))}
-      </div>
+      {!isGameEnded && (
+        <div className="flex flex-wrap items-center justify-center gap-2 lg:gap-5">
+          {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(number => (
+            <button key={number} onClick={() => setDiceNumber(number)}>
+              <NumberIcon number={number} selected={diceNumber === number} size={'size-12 md:size-16'} minimalLayout={minimalLayout} />
+            </button>
+          ))}
+        </div>
+      )}
       <div className="flex min-h-52 w-full flex-wrap items-center justify-center text-wrap bg-slate-400 bg-opacity-50 px-4 md:px-6 lg:px-12">
         <ResponsiveContainer width="100%" height={300}>
           <ComposedChart width={500} height={300} data={chartData}>

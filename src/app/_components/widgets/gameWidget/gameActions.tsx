@@ -10,6 +10,7 @@ import { PlusCircleIcon } from '@heroicons/react/24/outline';
 
 type GameActionsProps = {
   gameId: number;
+  isGameEnded: boolean;
   player: GamePlayerDTO;
   allPlayers: GamePlayerDTO[];
   endTurn: (turn: TurnDTO) => void;
@@ -32,6 +33,7 @@ type PlayerActions = {
 
 const GameActions = ({
   gameId,
+  isGameEnded,
   player,
   allPlayers,
   endTurn,
@@ -279,47 +281,49 @@ const GameActions = ({
           </div>
         </Button>
       </div>
-      <div className="flex gap-5">
-        <button onClick={endTurnFromActions} className="relative flex size-32 items-center justify-center">
-          {minimalLayout ? (
-            <span className="flex size-[6rem] items-center justify-center rounded-full border-2 border-catan-red bg-primary text-5xl">
-              ⏩️
-            </span>
-          ) : (
-            <Image src={'/assets/icons/action-end-turn.png'} alt="road" fill className="rounded-md" />
-          )}
-        </button>
-        <button onClick={clearCurrentTurnDataFromActions} className="relative flex size-32 items-center justify-center">
-          {minimalLayout ? (
-            <span className="flex size-[6rem] items-center justify-center rounded-full border-2 border-catan-red bg-primary text-5xl">
-              🔁
-            </span>
-          ) : (
-            <Image src={'/assets/icons/action-reset-selection.png'} alt="road" fill className="rounded-md" />
-          )}
-        </button>
-        <button
-          onClick={() => setShowDeletePreviousTurnModal(!showDeletePreviousTurnModal)}
-          className="relative flex size-32 items-center justify-center"
-        >
-          {minimalLayout ? (
-            <span className="flex size-[6rem] items-center justify-center rounded-full border-2 border-catan-red bg-primary text-5xl">
-              ⏪️
-            </span>
-          ) : (
-            <Image src={'/assets/icons/action-delete-previous-turn.png'} alt="road" fill className="rounded-md" />
-          )}
-        </button>
-        <button onClick={() => setShowEndGameModal(!showEndGameModal)} className="relative flex size-32 items-center justify-center">
-          {minimalLayout ? (
-            <span className="flex size-[6rem] items-center justify-center rounded-full border-2 border-catan-red bg-primary text-5xl">
-              🏁
-            </span>
-          ) : (
-            <Image src={'/assets/icons/action-end-game.png'} alt="road" fill className="rounded-md" />
-          )}
-        </button>
-      </div>
+      {!isGameEnded && (
+        <div className="flex gap-5">
+          <button onClick={endTurnFromActions} className="relative flex size-32 items-center justify-center">
+            {minimalLayout ? (
+              <span className="flex size-[6rem] items-center justify-center rounded-full border-2 border-catan-red bg-primary text-5xl">
+                ⏩️
+              </span>
+            ) : (
+              <Image src={'/assets/icons/action-end-turn.png'} alt="road" fill className="rounded-md" />
+            )}
+          </button>
+          <button onClick={clearCurrentTurnDataFromActions} className="relative flex size-32 items-center justify-center">
+            {minimalLayout ? (
+              <span className="flex size-[6rem] items-center justify-center rounded-full border-2 border-catan-red bg-primary text-5xl">
+                🔁
+              </span>
+            ) : (
+              <Image src={'/assets/icons/action-reset-selection.png'} alt="road" fill className="rounded-md" />
+            )}
+          </button>
+          <button
+            onClick={() => setShowDeletePreviousTurnModal(!showDeletePreviousTurnModal)}
+            className="relative flex size-32 items-center justify-center"
+          >
+            {minimalLayout ? (
+              <span className="flex size-[6rem] items-center justify-center rounded-full border-2 border-catan-red bg-primary text-5xl">
+                ⏪️
+              </span>
+            ) : (
+              <Image src={'/assets/icons/action-delete-previous-turn.png'} alt="road" fill className="rounded-md" />
+            )}
+          </button>
+          <button onClick={() => setShowEndGameModal(!showEndGameModal)} className="relative flex size-32 items-center justify-center">
+            {minimalLayout ? (
+              <span className="flex size-[6rem] items-center justify-center rounded-full border-2 border-catan-red bg-primary text-5xl">
+                🏁
+              </span>
+            ) : (
+              <Image src={'/assets/icons/action-end-game.png'} alt="road" fill className="rounded-md" />
+            )}
+          </button>
+        </div>
+      )}
     </div>
   );
 };

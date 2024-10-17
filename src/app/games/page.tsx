@@ -71,7 +71,7 @@ const GamesPage = () => {
                     <span className="flex w-full items-center justify-start gap-1">
                       {game.endTimestamp ? (
                         <>
-                          <span className="mr-1">Start:</span>
+                          <span className="mr-1">End:</span>
                           <span>
                             {formatDate(game.startTimestamp ?? '', DEFAULT_LOCALE, {
                               weekday: 'short',

@@ -52,7 +52,7 @@ export const createGame = async (gameData: GameSetupDTO): Promise<number> => {
 export const endCurrentGame = async (gameId: number, playersData: GamePlayerDTO[]): Promise<boolean | null> => {
   try {
     const response = await gameApi.endGame(gameId, playersData);
-    return response?.status === 201;
+    return response?.status === 200;
   } catch (error) {
     console.error('Error ending game:', error);
     return null;

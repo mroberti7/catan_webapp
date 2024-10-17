@@ -12,6 +12,7 @@ type GameWidgetProps = {
 
 const GameWidget = ({ initialGame }: GameWidgetProps) => {
   const [game, setGame] = useState<GameDTO>(initialGame);
+  const [isGameEnded] = useState(!!game.gameInfo.endTimestamp);
   const [showPlayers, setShowPlayers] = useState(true);
   const [currentPlayerToPlay, setCurrentPlayerToPlay] = useState(game?.gamePlayers?.[0] ?? 0);
   const [diceNumber, setDiceNumber] = useState<null | number>(null);
@@ -84,6 +85,7 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
         {game?.gameInfo?.id && (
           <GameActions
             gameId={game.gameInfo.id}
+            isGameEnded={isGameEnded}
             player={currentPlayerToPlay}
             allPlayers={game.gamePlayers}
             endTurn={endTurn}
@@ -98,6 +100,7 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
       <div id="game-dice" className="mb-10">
         <GameDice
           gameId={game.gameInfo.id ?? -1}
+          isGameEnded={isGameEnded}
           diceNumber={diceNumber}
           setDiceNumber={setDiceNumber}
           players={game.gamePlayers}
@@ -106,14 +109,16 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
           minimalLayout={minimalLayout}
         />
       </div>
-      <div className="flex w-full items-center justify-center">
-        <button
-          onClick={() => setMinimalLayout(!minimalLayout)}
-          className={`rounded-lg px-4 py-2 text-white ${minimalLayout ? 'bg-catan-red' : 'bg-primary'}`}
-        >
-          {minimalLayout ? 'Minimal' : 'Medieval'}
-        </button>
-      </div>
+      {!isGameEnded && (
+        <div className="flex w-full items-center justify-center">
+          <button
+            onClick={() => setMinimalLayout(!minimalLayout)}
+            className={`rounded-lg px-4 py-2 text-white ${minimalLayout ? 'bg-catan-red' : 'bg-primary'}`}
+          >
+            {minimalLayout ? 'Minimal' : 'Medieval'}
+          </button>
+        </div>
+      )}
     </div>
   );
 };
