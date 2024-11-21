@@ -1,10 +1,11 @@
 import { GameDTO, GamePlayerDTO, TurnDTO } from '@/lib/generated';
 import GamePlayers from '@/app/_components/widgets/gameWidget/gamePlayers';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import GameActions from '@/app/_components/widgets/gameWidget/gameActions';
 import { deleteLastTurn, endCurrentGame, errorToast, getGameById, saveTurn, successToast } from '@/app/utils/api';
 import GameDice from '@/app/_components/widgets/gameWidget/gameDice';
+import Timer from '@/app/_components/timer/timer';
 
 type GameWidgetProps = {
   initialGame: GameDTO;
@@ -18,6 +19,7 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
   const [diceNumber, setDiceNumber] = useState<null | number>(null);
   const [refreshDiceStats, setRefreshDiceStats] = useState(false);
   const [minimalLayout, setMinimalLayout] = useState(false);
+  const timerRef = useRef<any>(null);
 
   const refreshGame = async () => {
     const gameUpdated = await getGameById(game.gameInfo.id ?? 0);
@@ -26,6 +28,9 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
       setRefreshDiceStats(true);
       clearCurrentTurnData();
       successToast('Game updated');
+      if (timerRef.current) {
+        timerRef.current.resetAndRestartTimer();
+      }
     } else {
       errorToast('Error retrieving game');
     }
@@ -81,6 +86,9 @@ const GameWidget = ({ initialGame }: GameWidgetProps) => {
         setShowPlayers={setShowPlayers}
         currentPlayerToPlay={currentPlayerToPlay}
       />
+      <div id="game-timer" className="my-5 flex w-full items-center justify-center">
+        <Timer ref={timerRef} />
+      </div>
       <div id="game-actions" className="flex h-auto w-full items-start justify-between">
         {game?.gameInfo?.id && (
           <GameActions
